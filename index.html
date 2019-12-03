@@ -1,8 +1,25 @@
-<!DOCTYPE html>
-<meta charset="utf-8">
-<style>
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-.node {
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/css/semantic.css">
+	<link rel="stylesheet" href="/css/select2.css">
+
+	<script src="/js/jquery.js"></script>
+    <script src="/js/popper.js"></script>
+    <script src="/js/bootstrap.min.js" ></script>
+	<script src="/js/semantic.js" ></script>
+	<script src="/js/d3.min.v4.js"></script>
+	<script src="/js/select2.js"></script>
+    <title>Representing Coobo Database using D3</title>
+  </head>
+  <style>
+  .node {
   cursor: pointer;
 }
 
@@ -21,136 +38,670 @@
   text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff, 0 -1px 0 #fff;
 }
 
+.Dropdown_placeholder_filter{
+position:relative
+}
+  </style>
+  <body>
+ 
+ <script>
+$(document).ready(function() {
+    $('.js-example-basic-multiple').select2();
+});
 
-</style>
+</script>    
 <div>
-   Grade <select id='Grade' multiple onchange="FilterChange(Grade)" ></select>
-   Subject <select id='Subject' multiple onchange="FilterChange(Subject)"></select>
-   Unit <select id='Unit' multiple onchange="FilterChange(Unit)"></select>
-   Chapter <select id='Chapter' multiple onchange="FilterChange(Chapter)"></select>
-   Topic <select id='Topic' multiple onchange="FilterChange(Topic)">></select>
+<div style='position:relative;width:15%;display:inline-block;vertical-align: top;'>
+	<h1>FILTERS</h1>
+	<button style="position:relative;display:inline-block;left:28%" type="button" class="btn btn-primary" onclick="reset()"> Reset</button>
+		<div class='Dropdown_placeholder_filter'> Grade <select  multiple="multiple" class="ui fluid search dropdown"  multiple="" id='Grade' multiple onchange="FilterChange('Grade')" ></select> </div>
+	   <div class='Dropdown_placeholder_filter'> Subject <select   multiple="multiple" class="ui fluid search dropdown"  multiple=""  id='Subject' multiple onchange="FilterChange('Subject')"></select> </div>
+	   <div class='Dropdown_placeholder_filter'> Unit <select style='position:relative;width:20%;display:inline-block' multiple="multiple" class="ui fluid search dropdown"  multiple=""  id='Unit' multiple onchange="FilterChange('Unit')"></select> </div>
+		<div class='Dropdown_placeholder_filter'>Chapter <select multiple="multiple" class="ui fluid search dropdown"  multiple=""  id='Chapter' multiple onchange="FilterChange('Chapter')"></select></div>
+		<div class='Dropdown_placeholder_filter'>Topic <select multiple="multiple" class="ui fluid search dropdown"  multiple=""  id='Topic' multiple onchange="FilterChange('Topic')">></select></div>
+<div class='Dropdown_placeholder_filter'>Concept <select multiple="multiple" class="ui fluid search dropdown"  multiple=""  id='Concept' multiple onchange="FilterChange('Concept')">></select></div>
+
+	
 </div>
+<div style='position:relative;width:60%;display:inline-block'>
+<div> Zoom :<div id='slider'></div> <div id='saveFilters'></div> <div id='loadFilters'></div> </div>
+<div id= 'PackCircle'> <svg id='PackCircleSVG' width="900" height="900"></svg> </div>
+</div>
+<div style='position:relative;width:15%;display:inline-block;vertical-align: top;'>
 <div> 
-	Level-1<select id='Level1'> <option value='CooboTitles'>CooboTitles</option></select> 
-	Level-2<select id='Level2'> <option value='Concept'>Concept</option><option value='Grade'>Grade</option></select> 
-	Metric <select id='Metric'><option value='Scriptwriting'>Scriptwriting</option><option value='MediaFile'>MediaFile</option><option value='Production'>Production</option><option value='LengthofCoboo'>LengthofCoboo</option></select> 
+<h1>Chart Attributes</h1>
+	Level-1:<br> Definition:<select id='Level1' onchange='LevelChange(1)'>  <option value='Grade'>Grade</option> <option value='Subject' selected>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles'>CooboTitles</option> </select> <br>Color: <select id='Color_L1'><option value='Default'>Default- Level</option><option value='PerComplete' selected>PerComplete</option></select>
+	<br><br>Level-2:<br> Definition:<select id='Level2' onchange='LevelChange(2)'>  <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit' selected>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles'>CooboTitles</option> </select><br> Color: <select id='Color_L2'><option value='Default'>Default- Level</option><option value='PerComplete' selected>PerComplete</option></select>
+	<br><br>Level-3:<br> Definition:<select id='Level3' onchange='LevelChange(3)'> <option value='None'>None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter' selected>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles'>CooboTitles</option> </select> <br>Color: <select id='Color_L3'><option value='Default' selected>Default- Level</option><option value='PerComplete'>PerComplete</option></select>
+	<br><br>Level-4:<br> Definition:<select id='Level4' onchange='LevelChange(4)'> <option value='None'>None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic' selected>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles'>CooboTitles</option> </select><br> Color: <select id='Color_L4'><option value='Default' selected>Default- Level</option><option value='PerComplete'>PerComplete</option></select>
+	<br><br>Level-5:<br> Definition:<select id='Level5' onchange='LevelChange(5)'> <option value='None'>None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept' selected>Concept</option> <option value='CooboTitles'>CooboTitles</option> </select><br> Color: <select id='Color_L5'><option value='Default' selected>Default- Level</option><option value='PerComplete'>PerComplete</option></select>
+	<br><br>Level-6:<br> Definition:<select id='Level6' onchange='LevelChange(6)'> <option value='None'>None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles' selected>CooboTitles</option> </select> <br>Color: <select id='Color_L6'><option value='Default'>Default- Level</option><option value='ProjectStage' selected>ProjectStage</option></select>
+	<br><br>
+	<br><br>
+	<br>Size: <select id='Metric'><option value='Scriptwriting'>Scriptwriting</option><option value='MediaFile'>MediaFile</option><option value='Production'>Production</option><option value='LengthofCoboo'>LengthofCoboo</option></select>
+
+<button style="position:relative;display:inline-block;left:28%" type="button" class="btn btn-primary" onclick="GraphParameterChange()"> Generate Chart</button>
+	
+</div>
 </div>
 
-<div id= 'PackCircle'> <svg id='PackCircleSVG' width="1400" height="1400"></svg> </div>
-<script src="https://d3js.org/d3.v4.min.js"></script>
+
+</div>
 <script>
+
+function LevelChange(level)
+{
+
+var Level1_sel = $("#Level1").val()
+  var Level2_sel = $("#Level2").val()
+  var Level3_sel = $("#Level3").val()
+  var Level4_sel = $("#Level4").val()
+  var Level5_sel = $("#Level5").val()
+  var Level6_sel = $("#Level6").val()
+  if(Level3_sel == "None" && (Level6_sel != "None" || Level5_sel != "None" || Level4_sel != "None") ){$("#Level4").val("None");$("#Level5").val("None");$("#Level6").val("None")}
+  else if(Level4_sel == "None" && (Level6_sel != "None" || Level5_sel != "None") ){$("#Level5").val("None")}
+  else if(Level5_sel == "None" && Level6_sel != "None"){$("#Level6").val("None")}
+
+  
+if(level == 1){ levelname = $("#Level1").val() ; colorele = $("#Color_L1") ; $('#Color_L1').find('option').remove()}
+if(level == 2){ levelname = $("#Level2").val() ; colorele = $("#Color_L2") ; $('#Color_L2').find('option').remove()}
+if(level == 3){ levelname = $("#Level3").val() ; colorele = $("#Color_L3") ; $('#Color_L3').find('option').remove()}
+if(level == 4){ levelname = $("#Level4").val() ; colorele = $("#Color_L4") ; $('#Color_L4').find('option').remove()}
+if(level == 5){ levelname = $("#Level5").val() ; colorele = $("#Color_L5") ; $('#Color_L5').find('option').remove()}
+if(level == 6){ levelname = $("#Level6").val() ; colorele = $("#Color_L6") ; $('#Color_L6').find('option').remove()}
+
+
+colorele.append('<option value="Default"> Default</option>')
+if(levelname == 'CooboTitles'){ colorele.append('<option value="ProjectStage"> ProjectStage</option>');  }
+else{colorele.append('<option value="PerComplete"> PerComplete</option>')}
+}
+
+function reset()
+{
+loadFilters('Basic')
+GraphParameterChange()
+}
+
+function GraphParameterChange()
+{
+
+var e = document.getElementById("Metric");
+var MericSel = e.options[e.selectedIndex].value;
+
+var Level1_sel = $("#Level1").val()
+  var Level2_sel = $("#Level2").val()
+  var Level3_sel = $("#Level3").val()
+  var Level4_sel = $("#Level4").val()
+  var Level5_sel = $("#Level5").val()
+  var Level6_sel = $("#Level6").val()
+  
+for(i=0; i< window.data.length; i++)
+{
+	if(MericSel == "Scriptwriting"){data[i]['Metric'] = data[i].Scriptwriting}
+	if(MericSel == "MediaFile"){data[i]['Metric'] = data[i].MediaFile}
+	if(MericSel == "Production"){data[i]['Metric'] = data[i].Production}
+	if(MericSel == "LengthofCoboo"){data[i]['Metric'] = data[i].LengthofCoboo}
+}
+		
+		
+var data_k = window.data.map((e)=>{
+  
+  if(Level3_sel == 'None'){return {"Level1":e[Level1_sel], "Level2":e[Level2_sel], "size": +e.Metric }}
+  if(Level4_sel == 'None'){return {"Level1":e[Level1_sel], "Level2":e[Level2_sel],"Level3":e[Level3_sel], "size": +e.Metric}}
+  if(Level5_sel == 'None'){return {"Level1":e[Level1_sel], "Level2":e[Level2_sel],"Level3":e[Level3_sel],"Level4":e[Level4_sel], "size": +e.Metric}}
+  if(Level5_sel == 'None'){return {"Level1":e[Level1_sel], "Level2":e[Level2_sel],"Level3":e[Level3_sel],"Level4":e[Level4_sel],"Level5":e[Level5_sel], "size": +e.Metric}}
+ return {"Level1":e[Level1_sel], "Level2":e[Level2_sel],"Level3":e[Level3_sel],"Level4":e[Level4_sel],"Level5":e[Level5_sel],"Level6":e[Level6_sel], "size": +e.Metric}
+ })
+
+ if(Level3_sel == 'None')
+ {
+ 
+ var nested = 
+	d3.nest()
+  .key(function(d) { return d.Level1; })
+  .key(function(d) { return d.Level2; })
+  .rollup(function(v) {
+     return {
+	 size: d3.sum(v, function(d) { return d.size; }),
+	}
+	
+  }).entries(data_k);
+  
+ console.log(nested)
+ 
+ var root = {"name":"embibe", "children": []};
+		for(var i=0; i<nested.length; i++) {
+		result = {"name":nested[i].key,"children":[]}
+			for(var j=0; j<nested[i].values.length;j++)
+			{
+			result.children.push({"name":nested[i].values[j].key, "size": nested[i].values[j].value.size });
+				
+			
+			}
+			root.children.push(result)
+			
+		}
+	
+}		
+ 
+ else if(Level4_sel == 'None')
+ {
+ 
+
+ var nested = 
+	d3.nest()
+  .key(function(d) { return d.Level1; })
+  .key(function(d) { return d.Level2; })
+  .key(function(d) { return d.Level3; })
+  .rollup(function(v) {
+     return {
+	 size: d3.sum(v, function(d) { return d.size; }),
+	}
+	
+  }).entries(data_k);
+  
+ 
+ var root = {"name":"embibe", "children": []};
+		for(var i=0; i<nested.length; i++) {
+		result = {"name":nested[i].key,"children":[]}
+			for(var j=0; j<nested[i].values.length;j++)
+			{
+			result.children.push({"name":nested[i].values[j].key, "children": [ ] });
+				for(var k=0; k<nested[i].values[j].values.length;k++)
+				{
+				result.children[j].children.push({"name":nested[i].values[j].values[k].key, "size":nested[i].values[j].values[k].value.size });
+				}
+				
+			}
+			root.children.push(result)
+			
+		}
+	
+
+}		
+ 
+ else if(Level5_sel == 'None')
+ {
+ 
+
+ var nested = 
+	d3.nest()
+  .key(function(d) { return d.Level1; })
+  .key(function(d) { return d.Level2; })
+  .key(function(d) { return d.Level3; })
+  .key(function(d) { return d.Level4; })
+  .rollup(function(v) {
+     return {
+	 size: d3.sum(v, function(d) { return d.size; }),
+	}
+	
+  }).entries(data_k);
+  
+ 
+ var root = {"name":"embibe", "children": []};
+		for(var i=0; i<nested.length; i++) {
+		result = {"name":nested[i].key,"children":[]}
+			for(var j=0; j<nested[i].values.length;j++)
+			{
+			result.children.push({"name":nested[i].values[j].key, "children": [ ] });
+				for(var k=0; k<nested[i].values[j].values.length;k++)
+				{
+				result.children[j].children.push({"name":nested[i].values[j].values[k].key,  "children": [ ] });
+				for(var l=0; l<nested[i].values[j].values[k].values.length;l++)
+				{
+					result.children[j].children[k].children.push({"name":nested[i].values[j].values[k].values[l].key, "size":nested[i].values[j].values[k].values[l].value.size });
+			
+				}
+				}
+				
+			}
+			root.children.push(result)
+			
+		}
+	
+
+}
+
+
+else if(Level6_sel == 'None')
+ {
+ 
+
+ var nested = 
+	d3.nest()
+  .key(function(d) { return d.Level1; })
+  .key(function(d) { return d.Level2; })
+  .key(function(d) { return d.Level3; })
+  .key(function(d) { return d.Level4; })
+  .key(function(d) { return d.Level5; })
+  .rollup(function(v) {
+     return {
+	 size: d3.sum(v, function(d) { return d.size; }),
+	}
+	
+  }).entries(data_k);
+  
+ 
+ var root = {"name":"embibe", "children": []};
+		for(var i=0; i<nested.length; i++) {
+		result = {"name":nested[i].key,"children":[]}
+			for(var j=0; j<nested[i].values.length;j++)
+			{
+			result.children.push({"name":nested[i].values[j].key, "children": [ ] });
+				for(var k=0; k<nested[i].values[j].values.length;k++)
+				{
+				result.children[j].children.push({"name":nested[i].values[j].values[k].key,  "children": [ ] });
+				for(var l=0; l<nested[i].values[j].values[k].values.length;l++)
+				{
+				result.children[j].children[k].children.push({"name":nested[i].values[j].values[k].values[l].key,  "children": [ ] });
+				for(var m=0; m<nested[i].values[j].values[k].values[l].values.length;m++)
+				{
+					result.children[j].children[k].children[l].children.push({"name":nested[i].values[j].values[k].values[l].values[m].key, "size":nested[i].values[j].values[k].values[l].values[m].value.size });
+				}
+				}
+				}
+				
+			}
+			root.children.push(result)
+			
+		}
+	
+
+}
+
+else 
+ {
+ 
+
+ var nested = 
+	d3.nest()
+  .key(function(d) { return d.Level1; })
+  .key(function(d) { return d.Level2; })
+  .key(function(d) { return d.Level3; })
+  .key(function(d) { return d.Level4; })
+  .key(function(d) { return d.Level5; })
+  .key(function(d) { return d.Level6; })
+  .rollup(function(v) {
+     return {
+	 size: d3.sum(v, function(d) { return d.size; }),
+	}
+	
+  }).entries(data_k);
+  
+ 
+ var root = {"name":"embibe", "children": []};
+		for(var i=0; i<nested.length; i++) {
+		result = {"name":nested[i].key,"children":[]}
+			for(var j=0; j<nested[i].values.length;j++)
+			{
+			result.children.push({"name":nested[i].values[j].key, "children": [ ] });
+				for(var k=0; k<nested[i].values[j].values.length;k++)
+				{
+				result.children[j].children.push({"name":nested[i].values[j].values[k].key,  "children": [ ] });
+				for(var l=0; l<nested[i].values[j].values[k].values.length;l++)
+				{
+				result.children[j].children[k].children.push({"name":nested[i].values[j].values[k].values[l].key,  "children": [ ] });
+				for(var m=0; m<nested[i].values[j].values[k].values[l].values.length;m++)
+				{
+				result.children[j].children[k].children[l].children.push({"name":nested[i].values[j].values[k].values[l].values[m].key,  "children": [ ] });
+				for(var n=0; n<nested[i].values[j].values[k].values[l].values[m].values.length;n++)
+				{
+					result.children[j].children[k].children[l].children[m].children.push({"name":nested[i].values[j].values[k].values[l].values[m].values[n].key, "size":nested[i].values[j].values[k].values[l].values[m].values[n].value.size });
+				}
+				}
+				}
+				}
+				
+			}
+			root.children.push(result)
+			
+		}
+	
+
+}
+
+
+ Color_L1 = $('#Color_L1').val()
+ Color_L2 = $('#Color_L2').val()
+ Color_L3 = $('#Color_L3').val()
+ Color_L4 = $('#Color_L4').val()
+ Color_L5 = $('#Color_L5').val()
+ Color_L6 = $('#Color_L6').val()
+ 
+ 
+ var colorRange = d3.scaleLinear()
+    .domain([0, 100])
+    .range(["hsl(4, 100%, 45%)", "hsl(130, 100%, 11%)"])
+    .interpolate(d3.interpolateHcl);
+	
+	
+ if(Color_L1 == "PerComplete"){
+ console.log('ComputingPerCom')
+window.L1colorval = 
+	d3.nest()
+  .key(function(d) { return d[Level1_sel]; })
+  .rollup(function(v) {
+     return {
+	 color: colorRange(Math.round(v.filter(function(d) { return d.Stage == 4 }).length*100 /  v.length))
+	}
+}).entries(window.data);
+ }
+ 
+  if(Color_L2 == "PerComplete"){
+window.L2colorval = 
+	d3.nest()
+  .key(function(d) { return d[Level2_sel]; })
+  .rollup(function(v) {
+     return {
+	 color: colorRange(Math.round(v.filter(function(d) { return d.Stage == 4 }).length*100 /  v.length))
+	}
+}).entries(window.data);
+
+ }
+ 
+ 
+  if(Color_L3 == "PerComplete"){
+window.L3colorval = 
+	d3.nest()
+  .key(function(d) { return d[Level3_sel]; })
+  .rollup(function(v) {
+     return {
+	 color: colorRange(Math.round(v.filter(function(d) { return d.Stage == 4 }).length*100 /  v.length))
+	}
+}).entries(window.data);
+
+ }
+ 
+  if(Color_L4 == "PerComplete"){
+window.L4colorval = 
+	d3.nest()
+  .key(function(d) { return d[Level4_sel]; })
+  .rollup(function(v) {
+     return {
+	 color: colorRange(Math.round(v.filter(function(d) { return d.Stage == 4 }).length*100 /  v.length))
+	}
+}).entries(window.data);
+
+ }
+ 
+ if(Color_L5 == "PerComplete"){
+window.L5colorval = 
+	d3.nest()
+  .key(function(d) { return d[Level5_sel]; })
+  .rollup(function(v) {
+     return {
+	 color: colorRange(Math.round(v.filter(function(d) { return d.Stage == 4 }).length*100 /  v.length))
+	}
+}).entries(window.data);
+
+ }
+ 
+ if(Color_L6 == "PerComplete"){
+window.L6colorval = 
+	d3.nest()
+  .key(function(d) { return d[Level6_sel]; })
+  .rollup(function(v) {
+     return {
+	 color: colorRange(Math.round(v.filter(function(d) { return d.Stage == 4 }).length*100 /  v.length))
+	}
+}).entries(window.data);
+
+console.log(window.L1colorval)
+console.log(window.L2colorval)
+console.log(window.L3colorval)
+console.log(window.L4colorval)
+console.log(window.L5colorval)
+console.log(window.L6colorval)
+
+ }
+ 
+ 
+ 
+ 
+ function colorRange2(colval)
+ {
+   if(colval==0){color = "hsl(0, 100%, 50%)"}
+	  if(colval==1){color =  "hsl(31, 100%, 45%)"}
+	  if(colval==2){color = "hsl(62, 100%, 45%)"}
+	  if(colval==3){color = "hsl(221, 100%, 22%)"}
+	  if(colval==4){color =  "hsl(104, 100%, 14%)"}
+	  return(color)
+ }
+ 
+ 
+ 
+  if(Color_L1 == "ProjectStage"){
+window.L1colorval = 
+	d3.nest()
+  .key(function(d) { return d[Level1_sel]; })
+  .rollup(function(v) {
+     return {
+		 color: colorRange2(d3.mean(v, function(d) { return d.Stage; }))
+	 
+	}
+}).entries(window.data);
+ }
+ 
+  if(Color_L2 == "ProjectStage"){
+window.L2colorval = 
+	d3.nest()
+  .key(function(d) { return d[Leve2_sel]; })
+  .rollup(function(v) {
+     return {
+	  color: colorRange2(d3.mean(v, function(d) { return d.Stage; }))
+	}
+}).entries(window.data);
+
+ }
+ 
+ 
+  if(Color_L3 == "ProjectStage"){
+window.L3colorval = 
+	d3.nest()
+  .key(function(d) { return d[Level3_sel]; })
+  .rollup(function(v) {
+     return {
+	 color: colorRange2(d3.mean(v, function(d) { return d.Stage; }))
+	}
+}).entries(window.data);
+
+ }
+ 
+  if(Color_L4 == "ProjectStage"){
+window.L4colorval = 
+	d3.nest()
+  .key(function(d) { return d[Level4_sel]; })
+  .rollup(function(v) {
+     return {
+	  color: colorRange2(d3.mean(v, function(d) { return d.Stage; }))
+	}
+}).entries(window.data);
+
+ }
+ 
+ if(Color_L5 == "ProjectStage"){
+ window.L5colorval = 
+	d3.nest()
+  .key(function(d) { return d[Level5_sel]; })
+  .rollup(function(v) {
+     return {
+	   color: colorRange2(d3.mean(v, function(d) { return d.Stage; }))
+	}
+}).entries(window.data);
+
+ }
+ 
+ if(Color_L6 == "ProjectStage"){
+ window.L6colorval = 
+	d3.nest()
+  .key(function(d) { return d[Level6_sel]; })
+  .rollup(function(v) {
+     return {
+	   color: colorRange2(d3.mean(v, function(d) { return d.Stage; }))
+	}
+}).entries(window.data);
+
+
+ }
+ 
+ 
+ 
+ 
+ circlepacking(root)
+ 
+}
 
 
 
 d3.csv("Taxonomy_new.csv", function(error, data) {
   if (error) throw error;
 
-data_bk = data
-loadFilters(data,'Basic')
-circlepacking(data)
- 
+
+window.data_bk = data
+window.data = data
+loadFilters('Basic')
+GraphParameterChange()
 });
 
-function FilterChange(filter)
-{
+function FilterChange(Changed){
+var GradeSel = $("#Grade").val();
+var SubjectSel = $("#Subject").val();
+var UnitSel = $("#Unit").val();
+var ChapterSel =  $("#Chapter").val();
+var TopicSel =  $("#Topic").val();
+var ConceptSel = $("#Concept").val();
 
-data = FilterData()
-circlepacking(data)
+if(Changed == "Grade"){window.grade_f = GradeSel}
+if(Changed == "Subject"){window.subject_f = SubjectSel}
+if(Changed == "Unit"){window.unit_f = UnitSel}
+if(Changed == "Chapter"){window.chapter_f = ChapterSel}
+if(Changed == "Topic"){window.topic_f = TopicSel}
+if(Changed == "Concept"){window.concept_f = ConceptSel}
+
+
+
+
+window.data = data_bk.filter(function(d) { return  (window.grade_f.length == 0 || window.grade_f.includes(d.Grade)) && (window.subject_f.length == 0 || window.subject_f.includes(d.Subject )) && (window.unit_f.length == 0 || window.unit_f.includes(d.Unit)) && (window.chapter_f.length == 0 || window.chapter_f.includes(d.Chapter)) && (window.topic_f.length == 0 ||window.topic_f.includes(d.Topic)) && (window.concept_f.length == 0 ||window.concept_f.includes(d.Concept)) } );
+
+loadFilters(Changed)
+GraphParameterChange()
 
 }
 
-function FilterData()
+
+function loadFilters(step)
 {
 
-var e = document.getElementById("Grade");
-var GradeSel = e.options[e.selectedIndex].value;
-
-var e = document.getElementById("Subject");
-var SubjectSel = e.options[e.selectedIndex].value;
-
-var e = document.getElementById("Unit");
-var UnitSel = e.options[e.selectedIndex].value;
-
-var e = document.getElementById("Chapter");
-var ChapterSel = e.options[e.selectedIndex].value;
-
-var e = document.getElementById("Topic");
-var TopicSel = e.options[e.selectedIndex].value;
-
-data = data_bk.filter(function(d) { return (d.Grade  == GradeSel || GradeSel == "All") && (d.Subject  == SubjectSel || SubjectSel == "All") && (d.Unit  == UnitSel || UnitSel == "All") && (d.Chapter  == ChapterSel || ChapterSel == "All")  && (d.Topic  == TopicSel || TopicSel == "All")  ;});
-
-return(data)
-}
-
-function loadFilters(data,step)
-{
-
+	if(step=="Basic")
+	{
+	window.data = window.data_bk
+	window.grade_f = []
+	window.subject_f = []
+	window.unit_f = []
+	window.chapter_f = []
+	window.topic_f = []
+	window.concept_f =[]
+	
+	$("#Grade").parent().find('a').remove()
+	$("#Subject").parent().find('a').remove()
+	$("#Unit").parent().find('a').remove()
+	$("#Chapter").parent().find('a').remove()
+	$("#Topic").parent().find('a').remove()
+	$("#Concept").parent().find('a').remove()
+	}
+	
 	var Grade = []
 	var Subject = []
 	var Unit = []
 	var Chapter = []
 	var Topic = []
-
+	var Concept = []
+	
 	for(var i=0; i<data.length; i++) {
 		if(Grade.indexOf(data[i].Grade) ===  -1){Grade.push( data[i].Grade )}
 		if(Subject.indexOf(data[i].Subject) ===  -1){Subject.push( data[i].Subject )}
 		if(Unit.indexOf(data[i].Unit) ===  -1){Unit.push( data[i].Unit )}
 		if(Chapter.indexOf(data[i].Chapter) ===  -1){Chapter.push( data[i].Chapter   )}
 		if(Topic.indexOf(data[i].Topic) ===  -1){Topic.push( data[i].Topic )}
+		if(Concept.indexOf(data[i].Concept) ===  -1){Concept.push( data[i].Concept )}
 	} 
-
-
-	var selectBox = document.getElementById('Grade');
-	selectBox.options.add( new Option( "All", "All" , "TRUE") );
-	for(var i = 0, l = Grade.length; i < l; i++){
-	  selectBox.options.add( new Option(Grade[i], Grade[i]) );
-	}
-	selectBox.value = "All"
 	
-
-	
+if(step!="Grade"){
+$('#Grade').empty()
+var selectBox = document.getElementById('Grade');
+	for(var i = 0, l = Grade.length; i < l; i++){selectBox.options.add( new Option(Grade[i], Grade[i]) );}
+}
+if(step!="Subject"){
+$('#Subject').empty()
 	var selectBox = document.getElementById('Subject');
-	selectBox.options.add( new Option( "All", "All" , "TRUE") );
-	for(var i = 0, l = Subject.length; i < l; i++){
-	  selectBox.options.add( new Option(Subject[i], Subject[i]) );
-	}
-	selectBox.value = "All"
-	
+	for(var i = 0, l = Subject.length; i < l; i++){ selectBox.options.add( new Option(Subject[i], Subject[i]) ); }	
+}
+if(step!="Unit"){
+$('#Unit').empty()
 	var selectBox = document.getElementById('Unit');
-	selectBox.options.add( new Option( "All", "All" , "TRUE") );
-	for(var i = 0, l = Unit.length; i < l; i++){
-	  selectBox.options.add( new Option(Unit[i], Unit[i]) );
-	}
-	selectBox.value = "All"
-	
+	for(var i = 0, l = Unit.length; i < l; i++){ selectBox.options.add( new Option(Unit[i], Unit[i]) ); }
+}
+if(step!="Chapter"){
+$('#Chapter').empty()
 	var selectBox = document.getElementById('Chapter');
-	selectBox.options.add( new Option( "All", "All" , "TRUE") );
-	for(var i = 0, l = Chapter.length; i < l; i++){
-	  selectBox.options.add( new Option(Chapter[i], Chapter[i]) );
-	}
-	selectBox.value = "All"
-	
+	for(var i = 0, l = Chapter.length; i < l; i++){ selectBox.options.add( new Option(Chapter[i], Chapter[i]) ); }
+}
+if(step!="Topic"){
+$('#Topic').empty()
 	var selectBox = document.getElementById('Topic');
-	selectBox.options.add( new Option( "All", "All" , "TRUE") );
-	for(var i = 0, l = Topic.length; i < l; i++){
-	  selectBox.options.add( new Option(Topic[i], Topic[i]) );
-	}
-	selectBox.value = "All"
+	for(var i = 0, l = Topic.length; i < l; i++){ selectBox.options.add( new Option(Topic[i], Topic[i]) ); }
+}
+if(step!="Concept"){
+$('#Concept').empty()
+	var selectBox = document.getElementById('Concept');
+	for(var i = 0, l = Concept.length; i < l; i++){ selectBox.options.add( new Option(Concept[i], Concept[i]) ); }
+}
 	
+	
+
+	
+	
+
+	
+
 	
 }
 
-function circlepacking(data){
+function circlepacking(root){
 
 d3.select("#PackCircle").select("svg").selectAll("*").remove();
+d3.select("#slider p").remove();
+ var width = 900,height = 900;
+
+ 
+var zoom = d3.zoom()
+            .scaleExtent([1, 4])
+            .on("zoom", zoomed);
+
+var drag = d3.drag()
+            .subject(function (d) { return d; })
+            .on("start", dragstarted)
+            .on("drag", dragged)
+            .on("end", dragended);
+
+var slider = d3.select("#slider").append("p").append("input")
+            .datum({})
+            .attr("type", "range")
+            .attr("value", zoom.scaleExtent()[0])
+            .attr("min", zoom.scaleExtent()[0])
+            .attr("max", zoom.scaleExtent()[1])
+            .attr("step", (zoom.scaleExtent()[1] - zoom.scaleExtent()[0]) / 20)
+            .on("input", slided);
 
 var svg = d3.select("#PackCircle").select("svg"),
     margin = 20,
     diameter = +svg.attr("width"),
     g = svg.append("g").attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
-
+svg
+    .call(zoom); 
+	
 var color = d3.scaleLinear()
-    .domain([-1, 5])
+    .domain([-1, 10])
     .range(["hsl(152,80%,80%)", "hsl(228,30%,40%)"])
     .interpolate(d3.interpolateHcl);
 
@@ -158,36 +709,15 @@ var pack = d3.pack()
     .size([diameter - margin, diameter - margin])
     .padding(2);
 
-	/*Chart Parameters*/
-	{	
-		var e = document.getElementById("Metric");
-		var MericSel = e.options[e.selectedIndex].value;
 
-		for(i=0; i< data.length; i++)
-		{
-		if(MericSel == "Scriptwriting"){data[i]['Metric'] = data[i].Scriptwriting}
-		if(MericSel == "MediaFile"){data[i]['Metric'] = data[i].MediaFile}
-		if(MericSel == "Production"){data[i]['Metric'] = data[i].Production}
-		if(MericSel == "LengthofCoboo"){data[i]['Metric'] = data[i].LengthofCoboo}
-		}
-	}
-	
-var nested = 
-	d3.nest()
-  .key(function(d) { return d.CooboTitles; })
-  .rollup(function(v) {
-     return {
-	 "children": v.map(function(v1) {return {"name": v1.Concept, "size": +v1.Metric };}),
-	 "name":v[0].CooboTitles
-	}
-	
-  }).entries(data);
-  
+
+ Color_L1 = $('#Color_L1').val()
+ Color_L2 = $('#Color_L2').val()
+ Color_L3 = $('#Color_L3').val()
+ Color_L4 = $('#Color_L4').val()
+ Color_L5 = $('#Color_L5').val()
+ Color_L6 = $('#Color_L6').val()
  
- var root = {"name":"embibe", "children": []};
-		for(var i=0; i<nested.length; i++) {
-			root.children.push(nested[i].value);
-		} 
 		
   root = d3.hierarchy(root)
       .sum(function(d) { return d.size; })
@@ -204,13 +734,46 @@ var nested =
 	.style("z-index", "10")
 	.style("visibility", "hidden")
 	
+	console.log(window.L1colorval)
+	console.log(Color_L2)
+	console.log(Color_L3)
+	console.log(Color_L4)
+	console.log(Color_L5)
+	console.log(Color_L6)
+	
+function getcolorofnode(ddepth,ddataname)
+{
+ if(ddepth ==0){circlecolor = color(ddepth)}
+	  if(ddepth ==1 && Color_L1 == 'Default'){circlecolor = color(ddepth)}
+	  else if(ddepth ==2 && Color_L2 == 'Default'){circlecolor = color(ddepth)}
+	  else if(ddepth ==3 && Color_L3 == 'Default'){circlecolor = color(ddepth)}
+	  else if(ddepth ==4 && Color_L4 == 'Default'){circlecolor = color(ddepth)}
+	  else if(ddepth ==5 && Color_L5 == 'Default'){circlecolor = color(ddepth)}
+	  else if(ddepth ==6 && Color_L6 == 'Default'){circlecolor = color(ddepth)}
+	  else if(ddepth ==1){ circlecolor = window.L1colorval.filter(function(d) { return d.key == ddataname })[0].value.color }
+	  else if(ddepth ==2){circlecolor = window.L2colorval.filter(function(d) { return d.key == ddataname })[0].value.color }
+	  else if(ddepth ==3){circlecolor = window.L3colorval.filter(function(d) { return d.key == ddataname })[0].value.color }
+	  else if(ddepth ==4){circlecolor = window.L4colorval.filter(function(d) { return d.key == ddataname })[0].value.color }
+	  else if(ddepth ==5){circlecolor = window.L5colorval.filter(function(d) { return d.key == ddataname })[0].value.color }
+	  else if(ddepth ==6){circlecolor = window.L6colorval.filter(function(d) { return d.key == ddataname })[0].value.color }
+	  return(circlecolor)
+}	
   var circle = g.selectAll("circle")
     .data(nodes)
     .enter().append("circle")
       .attr("class", function(d) { return d.parent ? d.children ? "node" : "node node--leaf" : "node node--root"; })
-      .style("fill", function(d) { return d.children ? color(d.depth) : null; })
-      .on("click", function(d) { if (focus !== d) zoom(d), d3.event.stopPropagation(); })
-	   .on("mouseover", function(d){return tooltip.text(d.data.name).style("visibility", "visible");})
+      .style("fill", function(d) {   return getcolorofnode(d.depth, d.data.name) })
+	  
+      .on("click", function(d) {  ; if (focus !== d) zoomfun(d), d3.event.stopPropagation(); })
+	   .on("mouseover", function(d){
+	   if(d.depth ==0){level_sel = $("#Level1").val()}
+	   if(d.depth ==1){level_sel = $("#Level2").val()}
+	   if(d.depth ==2){level_sel = $("#Level3").val()}
+	   if(d.depth ==3){level_sel = $("#Level4").val()}
+	   if(d.depth ==4){level_sel = $("#Level5").val()}
+	   if(d.depth ==5){level_sel = $("#Level6").val()}
+	   
+	   return tooltip.text( "Level: "+ level_sel + "  " + d.data.name).style("visibility", "visible");})
 	.on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
 	.on("mouseout", function(){return tooltip.style("visibility", "hidden");});
 	  ;
@@ -227,13 +790,12 @@ var nested =
 
   svg
       .style("background", color(-1))
-      .on("click", function() { zoom(root); });
+      .on("click", function() { zoomfun(root); });
 
   zoomTo([root.x, root.y, root.r * 2 + margin]);
 
-  function zoom(d) {
+  function zoomfun(d) {
     var focus0 = focus; focus = d;
-
     var transition = d3.transition()
         .duration(d3.event.altKey ? 7500 : 750)
         .tween("zoom", function(d) {
@@ -253,5 +815,59 @@ var nested =
     node.attr("transform", function(d) { return "translate(" + (d.x - v[0]) * k + "," + (d.y - v[1]) * k + ")"; });
     circle.attr("r", function(d) { return d.r * k; });
   }
+  
+   function zoomed() {
+   g.style("stroke-width", 1.5 / d3.event.transform.k + "px");
+  g.attr("transform", d3.event.transform); // updated for d3 v4
+  if( Math.round(d3.event.transform.k) == 1)
+  {
+  g.attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
+  }
+           slider.property("value", d3.event.transform.k);
+        }
+
+        function dragstarted(d) {
+            d3.event.sourceEvent.stopPropagation();
+            d3.select(this).classed("dragging", true);
+        }
+
+        function dragged(d) {
+            d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
+        }
+
+        function dragended(d) {
+            d3.select(this).classed("dragging", false);
+        }
+		 function slided(d) {
+            zoom.scaleTo(svg, d3.select(this).property("value"));
+        }
+}
+function stopped() {
+  if (d3.event.defaultPrevented) d3.event.stopPropagation();
 }
 </script>
+
+<script>
+	$('.dropdown').dropdown({
+  label: {
+    duration: 0,
+  },
+  debug: true,
+  performance: true,
+});
+
+$('.ui.checkbox')
+  .checkbox({
+    onChecked() {
+      const options = $('#members_dropdown > option').toArray().map(
+        (obj) => obj.value
+      );
+      $('#members_dropdown').dropdown('set exactly', options);
+    },
+    onUnchecked() {
+      $('#members_dropdown').dropdown('clear');
+    },
+  });
+</script>
+  </body>
+</html>
