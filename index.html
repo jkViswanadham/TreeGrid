@@ -766,12 +766,12 @@ function getcolorofnode(ddepth,ddataname)
 	  
       .on("click", function(d) {  ; if (focus !== d) zoomfun(d), d3.event.stopPropagation(); })
 	   .on("mouseover", function(d){
-	   if(d.depth ==0){level_sel = $("#Level1").val()}
-	   if(d.depth ==1){level_sel = $("#Level2").val()}
-	   if(d.depth ==2){level_sel = $("#Level3").val()}
-	   if(d.depth ==3){level_sel = $("#Level4").val()}
-	   if(d.depth ==4){level_sel = $("#Level5").val()}
-	   if(d.depth ==5){level_sel = $("#Level6").val()}
+	   if(d.depth ==1){level_sel = $("#Level1").val()}
+	   if(d.depth ==2){level_sel = $("#Level2").val()}
+	   if(d.depth ==3){level_sel = $("#Level3").val()}
+	   if(d.depth ==4){level_sel = $("#Level4").val()}
+	   if(d.depth ==5){level_sel = $("#Level5").val()}
+	   if(d.depth ==6){level_sel = $("#Level6").val()}
 	   
 	   return tooltip.text( "Level: "+ level_sel + "  " + d.data.name).style("visibility", "visible");})
 	.on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
