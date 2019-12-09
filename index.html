@@ -6,19 +6,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="/D3/css/bootstrap.min.css">
-	<link rel="stylesheet" href="/D3/css/semantic.css">
-	<link rel="stylesheet" href="/D3/css/select2.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/css/semantic.css">
+	<link rel="stylesheet" href="/css/select2.css">
 
-	<script src="/D3/js/jquery.js"></script>
-    <script src="/D3/js/popper.js"></script>
-    <script src="/D3/js/bootstrap.min.js" ></script>
-	<script src="/D3/js/semantic.js" ></script>
-	<script src="/D3/js/d3.min.v4.js"></script>
-	<script src="/D3/js/select2.js"></script>
+	<script src="/js/jquery.js"></script>
+    <script src="/js/popper.js"></script>
+    <script src="/js/bootstrap.min.js" ></script>
+	<script src="/js/semantic.js" ></script>
+	<script src="/js/d3.min.v4.js"></script>
+	<script src="/js/select2.js"></script>
+	 <script src="/js/jquery_ui.js"></script>
+	 	 <script src="/js/jquery_context.js"></script>
+<link rel="stylesheet" href="/css/jquery_ui.css">
     <title>Representing Coobo Database using D3</title>
   </head>
+  <script>
+  
+  $( function() {
+    $( "#sortable" ).sortable();
+    $( "#sortable" ).disableSelection();
+	$('.Heirarchy').click(function(){
+	eleid =  $(this).attr('id')
+	isactive =  $(this).attr('active')
+	if(isactive == 1)
+	{
+	$(this).css('background-color', '#eee');
+	$(this).css('color', 'black');
+	$(this).attr('active',0) 
+	}
+	else
+	{
+	$(this).css('background-color', '#003399');
+	$(this).css('color', 'white');
+	$(this).attr('active',1) 
+	}
+	
+	
+	})
+	})
+	
+  </script>
   <style>
+   .Heirarchy{
+position: relative;
+    display: inline-block;
+    width: 90px !important;
+    height: 90px !important;;
+    border-radius: 45px 45px 45px 45px;
+    margin-right: 12px !important;
+	text-align:center;
+  
+  }
+  
   .node {
   cursor: pointer;
 }
@@ -41,33 +81,72 @@
 .Dropdown_placeholder_filter{
 position:relative
 }
+
+div.tooltip {	
+    position: absolute;			
+    text-align: center;			
+   				
+    padding: 2px;				
+    font: 12px sans-serif;		
+    background: lightsteelblue;	
+    border: 0px;		
+    border-radius: 8px;			
+    pointer-events: none;			
+}
   </style>
   <body>
  
  <script>
+ 
+
+
 $(document).ready(function() {
     $('.js-example-basic-multiple').select2();
 });
 
-</script>    
-<div>
+</script> 
+
+
+   
+<div    style='left: 39px;position: relative;top: 12px;'>
 <div style='position:relative;width:15%;display:inline-block;vertical-align: top;'>
 	<h1>FILTERS</h1>
 	<button style="position:relative;display:inline-block;left:28%" type="button" class="btn btn-primary" onclick="reset()"> Reset</button>
-		<div class='Dropdown_placeholder_filter'> Grade <select  multiple="multiple" class="ui fluid search dropdown"  multiple="" id='Grade' multiple onchange="FilterChange('Grade')" ></select> </div>
-	   <div class='Dropdown_placeholder_filter'> Subject <select   multiple="multiple" class="ui fluid search dropdown"  multiple=""  id='Subject' multiple onchange="FilterChange('Subject')"></select> </div>
-	   <div class='Dropdown_placeholder_filter'> Unit <select style='position:relative;width:20%;display:inline-block' multiple="multiple" class="ui fluid search dropdown"  multiple=""  id='Unit' multiple onchange="FilterChange('Unit')"></select> </div>
-		<div class='Dropdown_placeholder_filter'>Chapter <select multiple="multiple" class="ui fluid search dropdown"  multiple=""  id='Chapter' multiple onchange="FilterChange('Chapter')"></select></div>
-		<div class='Dropdown_placeholder_filter'>Topic <select multiple="multiple" class="ui fluid search dropdown"  multiple=""  id='Topic' multiple onchange="FilterChange('Topic')">></select></div>
-<div class='Dropdown_placeholder_filter'>Concept <select multiple="multiple" class="ui fluid search dropdown"  multiple=""  id='Concept' multiple onchange="FilterChange('Concept')">></select></div>
+		<div class='Dropdown_placeholder_filter'> Grade <select  multiple="multiple" class="ui fluid search dropdown"  multiple="" id='Grade_Filter' multiple onchange="FilterChange('Grade')" ></select> </div>
+	   <div class='Dropdown_placeholder_filter'> Subject <select   multiple="multiple" class="ui fluid search dropdown"  multiple=""  id='Subject_Filter' multiple onchange="FilterChange('Subject')"></select> </div>
+	   <div class='Dropdown_placeholder_filter'> Unit <select style='position:relative;width:20%;display:inline-block' multiple="multiple" class="ui fluid search dropdown"  multiple=""  id='Unit_Filter' multiple onchange="FilterChange('Unit')"></select> </div>
+		<div class='Dropdown_placeholder_filter'>Chapter <select multiple="multiple" class="ui fluid search dropdown"  multiple=""  id='Chapter_Filter' multiple onchange="FilterChange('Chapter')"></select></div>
+		<div class='Dropdown_placeholder_filter'>Topic <select multiple="multiple" class="ui fluid search dropdown"  multiple=""  id='Topic_Filter' multiple onchange="FilterChange('Topic')">></select></div>
+<div class='Dropdown_placeholder_filter'>Concept <select multiple="multiple" class="ui fluid search dropdown"  multiple=""  id='Concept_Filter' multiple onchange="FilterChange('Concept')">></select></div>
 
 	
 </div>
-<div style='position:relative;width:60%;display:inline-block'>
-<div> Zoom :<div id='slider'></div> <div id='saveFilters'></div> <div id='loadFilters'></div> </div>
-<div id= 'PackCircle'> <svg id='PackCircleSVG' width="900" height="900"></svg> </div>
+<div style='position:relative;width:75%;display:inline-block'>
+<div id="sortable" style='position:relative;display:inline-block'>
+  <div class='hasmenu Heirarchy' cf="PerComplete" active=1 style='background-color:#003399' id='Grade' oncontextmenu= "funccm()"  > <span  style="top: 24px;color: white;font-weight: bolder;position:relative;text-align:center">  Grade </span></div> 
+  <div class='hasmenu Heirarchy' cf="PerComplete" active=1 style='background-color:#003399' id='Subject'  > <span  style="top: 24px;color: white;font-weight: bolder;position:relative;text-align:center">  Subject </span></div> 
+  <div class='hasmenu Heirarchy' cf="PerComplete" active=1 style='background-color:#003399' id='Unit'   > <span  style="top: 24px;color: white;font-weight: bolder;position:relative;text-align:center">  Unit </span></div> 
+  <div class='hasmenu Heirarchy' cf="PerComplete"  active=1 style='background-color:#003399' id='Chapter'  > <span  style="top: 24px;color: white;font-weight: bolder;position:relative;text-align:center">  Chapter </span></div> 
+  <div class='hasmenu Heirarchy' cf="PerComplete"  active=1 style='background-color:#003399' id='Topic' > <span  style="top: 24px;color: white;font-weight: bolder;position:relative;text-align:center">  Topic </span> </div>
+   <div class='hasmenu Heirarchy'  cf="PerComplete" active=1 style='background-color:#003399' id='Concept'  > <span  style="top: 24px;color: white;font-weight: bolder;position:relative;text-align:center">  Concept </span></div>
+   <div class='hasmenu Heirarchy' cf="PerComplete" active=1 style='background-color:#003399' id='CooboTitles'  > <span  style="top: 24px;color: white;font-weight: bolder;position:relative;text-align:center"> CooboTitles </span> </div>
+   
+  
 </div>
-<div style='position:relative;width:15%;display:inline-block;vertical-align: top;'>
+
+ <span style="position:relative;top:25px"> Size: <select id='Metric'><option value='Scriptwriting'>Scriptwriting</option><option value='MediaFile'>MediaFile</option><option value='Production'>Production</option><option value='LengthofCoboo'>LengthofCoboo</option></select> </span>
+
+<button style="position:relative;display:inline-block;top:25px" type="button" class="btn btn-primary" onclick="GraphParameterChange()"> Generate Chart</button>
+	
+	
+	
+
+<div> Zoom :<div id='slider'></div> <div id='saveFilters'></div> <div id='loadFilters'></div> </div>
+
+
+<div id= 'PackCircle'> <svg id='PackCircleSVG' width="1200" height="1200"></svg> </div>
+</div>
+<div style='position:relative;width:15%;display:none;vertical-align: top;'>
 <div> 
 <h1>Chart Attributes</h1>
 	Level-1:<br> Definition:<select id='Level1' onchange='LevelChange(1)'>  <option value='Grade'>Grade</option> <option value='Subject' selected>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles'>CooboTitles</option> </select> <br>Color: <select id='Color_L1'><option value='Default'>Default- Level</option><option value='PerComplete' selected>PerComplete</option></select>
@@ -75,12 +154,10 @@ $(document).ready(function() {
 	<br><br>Level-3:<br> Definition:<select id='Level3' onchange='LevelChange(3)'> <option value='None'>None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter' selected>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles'>CooboTitles</option> </select> <br>Color: <select id='Color_L3'><option value='Default' selected>Default- Level</option><option value='PerComplete'>PerComplete</option></select>
 	<br><br>Level-4:<br> Definition:<select id='Level4' onchange='LevelChange(4)'> <option value='None'>None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic' selected>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles'>CooboTitles</option> </select><br> Color: <select id='Color_L4'><option value='Default' selected>Default- Level</option><option value='PerComplete'>PerComplete</option></select>
 	<br><br>Level-5:<br> Definition:<select id='Level5' onchange='LevelChange(5)'> <option value='None'>None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept' selected>Concept</option> <option value='CooboTitles'>CooboTitles</option> </select><br> Color: <select id='Color_L5'><option value='Default' selected>Default- Level</option><option value='PerComplete'>PerComplete</option></select>
-	<br><br>Level-6:<br> Definition:<select id='Level6' onchange='LevelChange(6)'> <option value='None'>None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles' selected>CooboTitles</option> </select> <br>Color: <select id='Color_L6'><option value='Default'>Default- Level</option><option value='ProjectStage' selected>ProjectStage</option></select>
+	<br><br>Level-6:<br> Definition:<select id='Level6' onchange='LevelChange(6)'> <option value='None'>None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles' selected>CooboTitles</option> </select> <br>Color: <select id='Color_L6'><option value='Default'>Default- Level</option><option value='PerComplete'>PerComplete</option></select>
+	<br><br>Level-7:<br> Definition:<select id='Level7' onchange='LevelChange(7)'> <option value='None'>None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles' selected>CooboTitles</option> </select> <br>Color: <select id='Color_L7'><option value='Default'>Default- Level</option><option value='PerComplete'>PerComplete</option></select>
 	<br><br>
 	<br><br>
-	<br>Size: <select id='Metric'><option value='Scriptwriting'>Scriptwriting</option><option value='MediaFile'>MediaFile</option><option value='Production'>Production</option><option value='LengthofCoboo'>LengthofCoboo</option></select>
-
-<button style="position:relative;display:inline-block;left:28%" type="button" class="btn btn-primary" onclick="GraphParameterChange()"> Generate Chart</button>
 	
 </div>
 </div>
@@ -98,22 +175,15 @@ var Level1_sel = $("#Level1").val()
   var Level4_sel = $("#Level4").val()
   var Level5_sel = $("#Level5").val()
   var Level6_sel = $("#Level6").val()
-  if(Level3_sel == "None" && (Level6_sel != "None" || Level5_sel != "None" || Level4_sel != "None") ){$("#Level4").val("None");$("#Level5").val("None");$("#Level6").val("None")}
-  else if(Level4_sel == "None" && (Level6_sel != "None" || Level5_sel != "None") ){$("#Level5").val("None")}
-  else if(Level5_sel == "None" && Level6_sel != "None"){$("#Level6").val("None")}
+  var Level7_sel = $("#Level7").val()
+  if(Level3_sel == "None" && (Level7_sel != "None" || Level6_sel != "None" || Level5_sel != "None" || Level4_sel != "None") )
+  {$("#Level4").val("None");$("#Level5").val("None");$("#Level6").val("None");$("#Level7").val("None")}
+  else if(Level4_sel == "None" && (Level7_sel != "None" || Level6_sel != "None" || Level5_sel != "None") ){$("#Level5").val("None");$("#Level6").val("None");$("#Level7").val("None")}
+  else if(Level5_sel == "None" && (Level7_sel != "None" || Level6_sel != "None")){$("#Level7").val("None");$("#Level6").val("None")}
+   else if(Level6_sel == "None" && (Level7_sel != "None")){$("#Level7").val("None")}
 
   
-if(level == 1){ levelname = $("#Level1").val() ; colorele = $("#Color_L1") ; $('#Color_L1').find('option').remove()}
-if(level == 2){ levelname = $("#Level2").val() ; colorele = $("#Color_L2") ; $('#Color_L2').find('option').remove()}
-if(level == 3){ levelname = $("#Level3").val() ; colorele = $("#Color_L3") ; $('#Color_L3').find('option').remove()}
-if(level == 4){ levelname = $("#Level4").val() ; colorele = $("#Color_L4") ; $('#Color_L4').find('option').remove()}
-if(level == 5){ levelname = $("#Level5").val() ; colorele = $("#Color_L5") ; $('#Color_L5').find('option').remove()}
-if(level == 6){ levelname = $("#Level6").val() ; colorele = $("#Color_L6") ; $('#Color_L6').find('option').remove()}
 
-
-colorele.append('<option value="Default"> Default</option>')
-if(levelname == 'CooboTitles'){ colorele.append('<option value="ProjectStage"> ProjectStage</option>');  }
-else{colorele.append('<option value="PerComplete"> PerComplete</option>')}
 }
 
 function reset()
@@ -128,14 +198,48 @@ function GraphParameterChange()
 var e = document.getElementById("Metric");
 var MericSel = e.options[e.selectedIndex].value;
 
+	iter=1
+	$("#Level1").val("None")
+	$("#Level2").val("None")
+	$("#Level3").val("None")
+	$("#Level4").val("None")
+	$("#Level5").val("None")
+	$("#Level6").val("None")
+	$("#Level7").val("None")
+	
+	$("#Color_L1").val("None")
+	$("#Color_L2").val("None")
+	$("#Color_L3").val("None")
+	$("#Color_L4").val("None")
+	$("#Color_L5").val("None")
+	$("#Color_L6").val("None")
+	$("#Color_L7").val("None")
+	
+ var we = document.getElementById('sortable').children
+ for(i =0; i< we.length; i++)
+ {
+ 	console.log(we.item(i).attributes.active.value == "1")
+	console.log(we.item(i).attributes.active.value )
+	if(we.item(i).attributes.active.value == "1")
+	{
+	
+	$("#Level"+iter).val(we.item(i).id)
+	$("#Color_L"+iter).val(we.item(i).attributes.cf.value)
+	
+	iter=iter +1
+	
+	}
+ }
+
+
 var Level1_sel = $("#Level1").val()
   var Level2_sel = $("#Level2").val()
   var Level3_sel = $("#Level3").val()
   var Level4_sel = $("#Level4").val()
   var Level5_sel = $("#Level5").val()
   var Level6_sel = $("#Level6").val()
-  
-for(i=0; i< window.data.length; i++)
+   var Level7_sel = $("#Level6").val()
+for(i=0; i< data.length; i++)
 {
 	if(MericSel == "Scriptwriting"){data[i]['Metric'] = data[i].Scriptwriting}
 	if(MericSel == "MediaFile"){data[i]['Metric'] = data[i].MediaFile}
@@ -144,13 +248,14 @@ for(i=0; i< window.data.length; i++)
 }
 		
 		
-var data_k = window.data.map((e)=>{
+var data_k = data.map((e)=>{
   
   if(Level3_sel == 'None'){return {"Level1":e[Level1_sel], "Level2":e[Level2_sel], "size": +e.Metric }}
   if(Level4_sel == 'None'){return {"Level1":e[Level1_sel], "Level2":e[Level2_sel],"Level3":e[Level3_sel], "size": +e.Metric}}
   if(Level5_sel == 'None'){return {"Level1":e[Level1_sel], "Level2":e[Level2_sel],"Level3":e[Level3_sel],"Level4":e[Level4_sel], "size": +e.Metric}}
   if(Level5_sel == 'None'){return {"Level1":e[Level1_sel], "Level2":e[Level2_sel],"Level3":e[Level3_sel],"Level4":e[Level4_sel],"Level5":e[Level5_sel], "size": +e.Metric}}
- return {"Level1":e[Level1_sel], "Level2":e[Level2_sel],"Level3":e[Level3_sel],"Level4":e[Level4_sel],"Level5":e[Level5_sel],"Level6":e[Level6_sel], "size": +e.Metric}
+   if(Level6_sel == 'None'){return {"Level1":e[Level1_sel], "Level2":e[Level2_sel],"Level3":e[Level3_sel],"Level4":e[Level4_sel],"Level5":e[Level5_sel],"Level6":e[Level6_sel], "size": +e.Metric}}
+ return {"Level1":e[Level1_sel], "Level2":e[Level2_sel],"Level3":e[Level3_sel],"Level4":e[Level4_sel],"Level5":e[Level5_sel],"Level6":e[Level6_sel],"Level7":e[Level7_sel], "size": +e.Metric}
  })
 
  if(Level3_sel == 'None')
@@ -167,7 +272,7 @@ var data_k = window.data.map((e)=>{
 	
   }).entries(data_k);
   
- console.log(nested)
+
  
  var root = {"name":"embibe", "children": []};
 		for(var i=0; i<nested.length; i++) {
@@ -309,7 +414,7 @@ else if(Level6_sel == 'None')
 
 }
 
-else 
+else if(Level7_sel == 'None')
  {
  
 
@@ -321,6 +426,7 @@ else
   .key(function(d) { return d.Level4; })
   .key(function(d) { return d.Level5; })
   .key(function(d) { return d.Level6; })
+  
   .rollup(function(v) {
      return {
 	 size: d3.sum(v, function(d) { return d.size; }),
@@ -360,6 +466,58 @@ else
 
 }
 
+else
+{
+var nested = 
+	d3.nest()
+  .key(function(d) { return d.Level1; })
+  .key(function(d) { return d.Level2; })
+  .key(function(d) { return d.Level3; })
+  .key(function(d) { return d.Level4; })
+  .key(function(d) { return d.Level5; })
+  .key(function(d) { return d.Level6; })
+  .key(function(d) { return d.Level7; })
+  .rollup(function(v) {
+     return {
+	 size: d3.sum(v, function(d) { return d.size; }),
+	}
+	
+  }).entries(data_k);
+  
+ 
+ var root = {"name":"embibe", "children": []};
+		for(var i=0; i<nested.length; i++) {
+		result = {"name":nested[i].key,"children":[]}
+			for(var j=0; j<nested[i].values.length;j++)
+			{
+			result.children.push({"name":nested[i].values[j].key, "children": [ ] });
+				for(var k=0; k<nested[i].values[j].values.length;k++)
+				{
+				result.children[j].children.push({"name":nested[i].values[j].values[k].key,  "children": [ ] });
+				for(var l=0; l<nested[i].values[j].values[k].values.length;l++)
+				{
+				result.children[j].children[k].children.push({"name":nested[i].values[j].values[k].values[l].key,  "children": [ ] });
+				for(var m=0; m<nested[i].values[j].values[k].values[l].values.length;m++)
+				{
+				result.children[j].children[k].children[l].children.push({"name":nested[i].values[j].values[k].values[l].values[m].key,  "children": [ ] });
+				for(var n=0; n<nested[i].values[j].values[k].values[l].values[m].values.length;n++)
+				{
+				result.children[j].children[k].children[l].children[m].children.push({"name":nested[i].values[j].values[k].values[l].values[m].values[n].key,  "children": [ ] });
+				for(var o=0; o<nested[i].values[j].values[k].values[l].values[m].values[n].values.length;o++)
+				{
+					result.children[j].children[k].children[l].children[m].children[n].children.push({"name":nested[i].values[j].values[k].values[l].values[m].values[n].values[o].key, "size":nested[i].values[j].values[k].values[l].values[m].values[n].values[o].value.size });
+				}
+				}
+				}
+				}
+				}
+				
+			}
+			root.children.push(result)
+			
+		}
+	
+}
 
  Color_L1 = $('#Color_L1').val()
  Color_L2 = $('#Color_L2').val()
@@ -367,7 +525,7 @@ else
  Color_L4 = $('#Color_L4').val()
  Color_L5 = $('#Color_L5').val()
  Color_L6 = $('#Color_L6').val()
- 
+  Color_L7 = $('#Color_L7').val()
  
  var colorRange = d3.scaleLinear()
     .domain([0, 100])
@@ -375,85 +533,58 @@ else
     .interpolate(d3.interpolateHcl);
 	
 	
- if(Color_L1 == "PerComplete"){
- console.log('ComputingPerCom')
-window.L1colorval = 
-	d3.nest()
-  .key(function(d) { return d[Level1_sel]; })
+
+
+
+
+function getnodecolor_final(Level_sel, Color_Level)
+{
+
+colorval =	d3.nest()
+  .key(function(d) { return d[Level_sel]; })
   .rollup(function(v) {
      return {
 	 color: colorRange(Math.round(v.filter(function(d) { return d.Stage == 4 }).length*100 /  v.length))
 	}
-}).entries(window.data);
- }
- 
-  if(Color_L2 == "PerComplete"){
-window.L2colorval = 
+}).entries(data);
+
+
+if(Level_sel =="CooboTitles")
+{
+
+colorval = 
 	d3.nest()
-  .key(function(d) { return d[Level2_sel]; })
+  .key(function(d) { return d[Level_sel]; })
   .rollup(function(v) {
      return {
-	 color: colorRange(Math.round(v.filter(function(d) { return d.Stage == 4 }).length*100 /  v.length))
+		 color: colorRange2(d3.mean(v, function(d) { return d.Stage; }))
+	 
 	}
-}).entries(window.data);
+}).entries(data)
 
- }
+}
+
+
+
+
+
+return(colorval)
+}
+
+
  
  
-  if(Color_L3 == "PerComplete"){
-window.L3colorval = 
-	d3.nest()
-  .key(function(d) { return d[Level3_sel]; })
-  .rollup(function(v) {
-     return {
-	 color: colorRange(Math.round(v.filter(function(d) { return d.Stage == 4 }).length*100 /  v.length))
-	}
-}).entries(window.data);
+L1colorval = getnodecolor_final(Level1_sel,Color_L1 )
+L2colorval = getnodecolor_final(Level2_sel,Color_L2 )
 
- }
- 
-  if(Color_L4 == "PerComplete"){
-window.L4colorval = 
-	d3.nest()
-  .key(function(d) { return d[Level4_sel]; })
-  .rollup(function(v) {
-     return {
-	 color: colorRange(Math.round(v.filter(function(d) { return d.Stage == 4 }).length*100 /  v.length))
-	}
-}).entries(window.data);
+L3colorval = getnodecolor_final(Level3_sel,Color_L3 )
+L4colorval = getnodecolor_final(Level4_sel,Color_L4 )
 
- }
- 
- if(Color_L5 == "PerComplete"){
-window.L5colorval = 
-	d3.nest()
-  .key(function(d) { return d[Level5_sel]; })
-  .rollup(function(v) {
-     return {
-	 color: colorRange(Math.round(v.filter(function(d) { return d.Stage == 4 }).length*100 /  v.length))
-	}
-}).entries(window.data);
+L5colorval = getnodecolor_final(Level5_sel,Color_L5 )
+L6colorval = getnodecolor_final(Level6_sel,Color_L6 )
+L7colorval = getnodecolor_final(Level7_sel,Color_L7 )
 
- }
- 
- if(Color_L6 == "PerComplete"){
-window.L6colorval = 
-	d3.nest()
-  .key(function(d) { return d[Level6_sel]; })
-  .rollup(function(v) {
-     return {
-	 color: colorRange(Math.round(v.filter(function(d) { return d.Stage == 4 }).length*100 /  v.length))
-	}
-}).entries(window.data);
 
-console.log(window.L1colorval)
-console.log(window.L2colorval)
-console.log(window.L3colorval)
-console.log(window.L4colorval)
-console.log(window.L5colorval)
-console.log(window.L6colorval)
-
- }
  
  
  
@@ -470,79 +601,8 @@ console.log(window.L6colorval)
  
  
  
-  if(Color_L1 == "ProjectStage"){
-window.L1colorval = 
-	d3.nest()
-  .key(function(d) { return d[Level1_sel]; })
-  .rollup(function(v) {
-     return {
-		 color: colorRange2(d3.mean(v, function(d) { return d.Stage; }))
-	 
-	}
-}).entries(window.data);
- }
- 
-  if(Color_L2 == "ProjectStage"){
-window.L2colorval = 
-	d3.nest()
-  .key(function(d) { return d[Leve2_sel]; })
-  .rollup(function(v) {
-     return {
-	  color: colorRange2(d3.mean(v, function(d) { return d.Stage; }))
-	}
-}).entries(window.data);
 
- }
  
- 
-  if(Color_L3 == "ProjectStage"){
-window.L3colorval = 
-	d3.nest()
-  .key(function(d) { return d[Level3_sel]; })
-  .rollup(function(v) {
-     return {
-	 color: colorRange2(d3.mean(v, function(d) { return d.Stage; }))
-	}
-}).entries(window.data);
-
- }
- 
-  if(Color_L4 == "ProjectStage"){
-window.L4colorval = 
-	d3.nest()
-  .key(function(d) { return d[Level4_sel]; })
-  .rollup(function(v) {
-     return {
-	  color: colorRange2(d3.mean(v, function(d) { return d.Stage; }))
-	}
-}).entries(window.data);
-
- }
- 
- if(Color_L5 == "ProjectStage"){
- window.L5colorval = 
-	d3.nest()
-  .key(function(d) { return d[Level5_sel]; })
-  .rollup(function(v) {
-     return {
-	   color: colorRange2(d3.mean(v, function(d) { return d.Stage; }))
-	}
-}).entries(window.data);
-
- }
- 
- if(Color_L6 == "ProjectStage"){
- window.L6colorval = 
-	d3.nest()
-  .key(function(d) { return d[Level6_sel]; })
-  .rollup(function(v) {
-     return {
-	   color: colorRange2(d3.mean(v, function(d) { return d.Stage; }))
-	}
-}).entries(window.data);
-
-
- }
  
  
  
@@ -557,31 +617,31 @@ d3.csv("Taxonomy_new.csv", function(error, data) {
   if (error) throw error;
 
 
-window.data_bk = data
-window.data = data
+data_bk = data
+data = data
 loadFilters('Basic')
 GraphParameterChange()
 });
 
 function FilterChange(Changed){
-var GradeSel = $("#Grade").val();
-var SubjectSel = $("#Subject").val();
-var UnitSel = $("#Unit").val();
-var ChapterSel =  $("#Chapter").val();
-var TopicSel =  $("#Topic").val();
-var ConceptSel = $("#Concept").val();
+var GradeSel = $("#Grade_Filter").val();
+var SubjectSel = $("#Subject_Filter").val();
+var UnitSel = $("#Unit_Filter").val();
+var ChapterSel =  $("#Chapter_Filter").val();
+var TopicSel =  $("#Topic_Filter").val();
+var ConceptSel = $("#Concept_Filter").val();
 
-if(Changed == "Grade"){window.grade_f = GradeSel}
-if(Changed == "Subject"){window.subject_f = SubjectSel}
-if(Changed == "Unit"){window.unit_f = UnitSel}
-if(Changed == "Chapter"){window.chapter_f = ChapterSel}
-if(Changed == "Topic"){window.topic_f = TopicSel}
-if(Changed == "Concept"){window.concept_f = ConceptSel}
-
-
+if(Changed == "Grade"){grade_f = GradeSel}
+if(Changed == "Subject"){subject_f = SubjectSel}
+if(Changed == "Unit"){unit_f = UnitSel}
+if(Changed == "Chapter"){chapter_f = ChapterSel}
+if(Changed == "Topic"){topic_f = TopicSel}
+if(Changed == "Concept"){concept_f = ConceptSel}
 
 
-window.data = data_bk.filter(function(d) { return  (window.grade_f.length == 0 || window.grade_f.includes(d.Grade)) && (window.subject_f.length == 0 || window.subject_f.includes(d.Subject )) && (window.unit_f.length == 0 || window.unit_f.includes(d.Unit)) && (window.chapter_f.length == 0 || window.chapter_f.includes(d.Chapter)) && (window.topic_f.length == 0 ||window.topic_f.includes(d.Topic)) && (window.concept_f.length == 0 ||window.concept_f.includes(d.Concept)) } );
+
+
+data = data_bk.filter(function(d) { return  (grade_f.length == 0 || grade_f.includes(d.Grade)) && (subject_f.length == 0 || subject_f.includes(d.Subject )) && (unit_f.length == 0 || unit_f.includes(d.Unit)) && (chapter_f.length == 0 || chapter_f.includes(d.Chapter)) && (topic_f.length == 0 ||topic_f.includes(d.Topic)) && (concept_f.length == 0 ||concept_f.includes(d.Concept)) } );
 
 loadFilters(Changed)
 GraphParameterChange()
@@ -594,20 +654,20 @@ function loadFilters(step)
 
 	if(step=="Basic")
 	{
-	window.data = window.data_bk
-	window.grade_f = []
-	window.subject_f = []
-	window.unit_f = []
-	window.chapter_f = []
-	window.topic_f = []
-	window.concept_f =[]
+	data = data_bk
+	grade_f = []
+	subject_f = []
+	unit_f = []
+	chapter_f = []
+	topic_f = []
+	concept_f =[]
 	
-	$("#Grade").parent().find('a').remove()
-	$("#Subject").parent().find('a').remove()
-	$("#Unit").parent().find('a').remove()
-	$("#Chapter").parent().find('a').remove()
-	$("#Topic").parent().find('a').remove()
-	$("#Concept").parent().find('a').remove()
+	$("#Grade_Filter").parent().find('a').remove()
+	$("#Subject_Filter").parent().find('a').remove()
+	$("#Unit_Filter").parent().find('a').remove()
+	$("#Chapter_Filter").parent().find('a').remove()
+	$("#Topic_Filter").parent().find('a').remove()
+	$("#Concept_Filter").parent().find('a').remove()
 	}
 	
 	var Grade = []
@@ -627,33 +687,33 @@ function loadFilters(step)
 	} 
 	
 if(step!="Grade"){
-$('#Grade').empty()
-var selectBox = document.getElementById('Grade');
+$('#Grade_Filter').empty()
+var selectBox = document.getElementById('Grade_Filter');
 	for(var i = 0, l = Grade.length; i < l; i++){selectBox.options.add( new Option(Grade[i], Grade[i]) );}
 }
 if(step!="Subject"){
-$('#Subject').empty()
-	var selectBox = document.getElementById('Subject');
+$('#Subject_Filter').empty()
+	var selectBox = document.getElementById('Subject_Filter');
 	for(var i = 0, l = Subject.length; i < l; i++){ selectBox.options.add( new Option(Subject[i], Subject[i]) ); }	
 }
 if(step!="Unit"){
-$('#Unit').empty()
-	var selectBox = document.getElementById('Unit');
+$('#Unit_Filter').empty()
+	var selectBox = document.getElementById('Unit_Filter');
 	for(var i = 0, l = Unit.length; i < l; i++){ selectBox.options.add( new Option(Unit[i], Unit[i]) ); }
 }
 if(step!="Chapter"){
-$('#Chapter').empty()
-	var selectBox = document.getElementById('Chapter');
+$('#Chapter_Filter').empty()
+	var selectBox = document.getElementById('Chapter_Filter');
 	for(var i = 0, l = Chapter.length; i < l; i++){ selectBox.options.add( new Option(Chapter[i], Chapter[i]) ); }
 }
 if(step!="Topic"){
-$('#Topic').empty()
-	var selectBox = document.getElementById('Topic');
+$('#Topic_Filter').empty()
+	var selectBox = document.getElementById('Topic_Filter');
 	for(var i = 0, l = Topic.length; i < l; i++){ selectBox.options.add( new Option(Topic[i], Topic[i]) ); }
 }
 if(step!="Concept"){
-$('#Concept').empty()
-	var selectBox = document.getElementById('Concept');
+$('#Concept_Filter').empty()
+	var selectBox = document.getElementById('Concept_Filter');
 	for(var i = 0, l = Concept.length; i < l; i++){ selectBox.options.add( new Option(Concept[i], Concept[i]) ); }
 }
 	
@@ -699,6 +759,11 @@ var svg = d3.select("#PackCircle").select("svg"),
     g = svg.append("g").attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
 svg
     .call(zoom); 
+
+	
+	var div = d3.select("body").append("div")	
+    .attr("class", "tooltip")				
+    .style("opacity", 0);
 	
 var color = d3.scaleLinear()
     .domain([-1, 10])
@@ -734,12 +799,7 @@ var pack = d3.pack()
 	.style("z-index", "10")
 	.style("visibility", "hidden")
 	
-	console.log(window.L1colorval)
-	console.log(Color_L2)
-	console.log(Color_L3)
-	console.log(Color_L4)
-	console.log(Color_L5)
-	console.log(Color_L6)
+	
 	
 function getcolorofnode(ddepth,ddataname)
 {
@@ -750,12 +810,14 @@ function getcolorofnode(ddepth,ddataname)
 	  else if(ddepth ==4 && Color_L4 == 'Default'){circlecolor = color(ddepth)}
 	  else if(ddepth ==5 && Color_L5 == 'Default'){circlecolor = color(ddepth)}
 	  else if(ddepth ==6 && Color_L6 == 'Default'){circlecolor = color(ddepth)}
-	  else if(ddepth ==1){ circlecolor = window.L1colorval.filter(function(d) { return d.key == ddataname })[0].value.color }
-	  else if(ddepth ==2){circlecolor = window.L2colorval.filter(function(d) { return d.key == ddataname })[0].value.color }
-	  else if(ddepth ==3){circlecolor = window.L3colorval.filter(function(d) { return d.key == ddataname })[0].value.color }
-	  else if(ddepth ==4){circlecolor = window.L4colorval.filter(function(d) { return d.key == ddataname })[0].value.color }
-	  else if(ddepth ==5){circlecolor = window.L5colorval.filter(function(d) { return d.key == ddataname })[0].value.color }
-	  else if(ddepth ==6){circlecolor = window.L6colorval.filter(function(d) { return d.key == ddataname })[0].value.color }
+	  else if(ddepth ==7 && Color_L7 == 'Default'){circlecolor = color(ddepth)}
+	  else if(ddepth ==1){ circlecolor = L1colorval.filter(function(d) { return d.key == ddataname })[0].value.color }
+	  else if(ddepth ==2){circlecolor = L2colorval.filter(function(d) { return d.key == ddataname })[0].value.color }
+	  else if(ddepth ==3){circlecolor = L3colorval.filter(function(d) { return d.key == ddataname })[0].value.color }
+	  else if(ddepth ==4){circlecolor = L4colorval.filter(function(d) { return d.key == ddataname })[0].value.color }
+	  else if(ddepth ==5){circlecolor = L5colorval.filter(function(d) { return d.key == ddataname })[0].value.color }
+	  else if(ddepth ==6){circlecolor = L6colorval.filter(function(d) { return d.key == ddataname })[0].value.color }
+	  else if(ddepth ==7){circlecolor = L7colorval.filter(function(d) { return d.key == ddataname })[0].value.color }
 	  return(circlecolor)
 }	
   var circle = g.selectAll("circle")
@@ -765,26 +827,78 @@ function getcolorofnode(ddepth,ddataname)
       .style("fill", function(d) {   return getcolorofnode(d.depth, d.data.name) })
 	  
       .on("click", function(d) {  ; if (focus !== d) zoomfun(d), d3.event.stopPropagation(); })
-	   .on("mouseover", function(d){
-	   if(d.depth ==0){level_sel = "root"}
-	   if(d.depth ==1){level_sel = $("#Level1").val()}
-	   if(d.depth ==2){level_sel = $("#Level2").val()}
-	   if(d.depth ==3){level_sel = $("#Level3").val()}
-	   if(d.depth ==4){level_sel = $("#Level4").val()}
-	   if(d.depth ==5){level_sel = $("#Level5").val()}
-	   if(d.depth ==6){level_sel = $("#Level6").val()}
+	   .on("mouseover", function(d) {
+		if(d.depth ==0){level_sel = "Level: "+ d.data.name}
+	   if(d.depth ==1){level_sel =  "Level: "+ $("#Level1").val()+ "<br>"+ d.data.name}
+	   if(d.depth ==2){level_sel =  "Level: "+ $("#Level2").val()+ "<br>"+ d.data.name}
+	   if(d.depth ==3){level_sel =  "Level: "+ $("#Level3").val()+ "<br>"+ d.data.name}
+	   if(d.depth ==4){level_sel =  "Level: "+ $("#Level4").val()+ "<br>"+ d.data.name}
+	   if(d.depth ==5){level_sel =  "Level: "+ $("#Level5").val()+ "<br>"+ d.data.name}
+	   if(d.depth ==6){level_sel =  "Level: "+ $("#Level6").val()+ "<br>"+ d.data.name}
+	     if(d.depth ==7){level_sel =  "Level: "+ $("#Level7").val()+ "<br>"+ d.data.name}
 	   
-	   return tooltip.text( "Level: "+ level_sel + "  *** " + d.data.name).style("visibility", "visible");})
+            div.transition()		
+                .duration(200)		
+                .style("opacity", .9);		
+            div	.html(level_sel)	
+                .style("left", (d3.event.pageX) + "px")		
+                .style("top", (d3.event.pageY - 28) + "px");	
+            })					
+        .on("mouseout", function(d) {		
+            div.transition()		
+                .duration(500)		
+                .style("opacity", 0);	
+        })
 	.on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
-	.on("mouseout", function(){return tooltip.style("visibility", "hidden");});
 	  ;
+
+	  
+function getRandom(arr, n) {
+    var result = new Array(n),
+        len = arr.length,
+        taken = new Array(len);
+    if (n > len)
+        throw new RangeError("getRandom: more elements taken than available");
+    while (n--) {
+        var x = Math.floor(Math.random() * len);
+        result[n] = arr[x in taken ? taken[x] : x];
+        taken[x] = --len in taken ? taken[len] : len;
+    }
+    return result;
+}
+
+len2 = nodes.filter(function(d) { return d.parent === root; }).length
+console.log(len2)
+labelcount = 0
+for(i=0;i<nodes.length;i++)
+{
+if(nodes[i]['parent'] === root)
+{
+labelcount = labelcount + 1
+if(labelcount % 5 != 0 & len2 > 500)
+{
+nodes[i]['Showlabel'] = 'F'
+}
+else
+{
+nodes[i]['Showlabel'] = 'T'
+}
+}
+else
+{
+nodes[i]['Showlabel'] = 'F'
+}
+
+}
+
+console.log(nodes)
 
   var text = g.selectAll("text")
     .data(nodes)
     .enter().append("text")
       .attr("class", "label")
       .style("fill-opacity", function(d) { return d.parent === root ? 1 : 0; })
-      .style("display", function(d) { return d.parent === root ? "inline" : "none"; })
+      .style("display", function(d) { return d.Showlabel === 'T' ? "inline" : "none"; })
       .text(function(d) { return d.data.name; });
 
   var node = g.selectAll("circle,text");
@@ -842,7 +956,41 @@ function getcolorofnode(ddepth,ddataname)
 		 function slided(d) {
             zoom.scaleTo(svg, d3.select(this).property("value"));
         }
-}
+
+		const cell = svg.append("g")
+      .attr("fill", "none")
+    .selectAll("g")
+    .data(root)
+    .enter().append("g");
+
+  cell.append("path")
+      .attr("stroke", "orange")
+      .attr("d", d => `M${d3.polygonCentroid(d)}L${d.data}`);
+
+  cell.append("path")
+      .attr("stroke", "#ccc")
+      .attr("d", d => `M${d.join("L")}Z`);
+
+
+  svg.append("g")
+      .style("font", "10px sans-serif")
+    .selectAll("text")
+    
+    .enter().append("text")
+      .each(function(d) {
+        const [x, y] = d.data, [cx, cy] = d3.polygonCentroid(d);
+        const angle = Math.round(Math.atan2(cy - y, cx - x) / Math.PI * 2);
+        d3.select(this).call(angle === 0 ? orient.right
+            : angle === -1 ? orient.top
+            : angle === 1 ? orient.bottom
+            : orient.left);
+      })
+      .attr("transform", d => `translate(${d.data})`)
+      .text((d, i) => i);
+
+		
+		
+		}
 function stopped() {
   if (d3.event.defaultPrevented) d3.event.stopPropagation();
 }
@@ -870,5 +1018,95 @@ $('.ui.checkbox')
     },
   });
 </script>
+
+
+<style>
+.hasmenu,
+.hasmenu2 {
+  border: 1px solid #008;
+  margin: 3px;
+  padding: 5px;
+  width: 30px;
+}
+
+/* Optionally define a fixed width for menus */
+.ui-menu {
+  width: 220px;
+}
+
+/* Allow to use <kbd> elements inside the title to define shortcut hints. */
+.ui-menu kbd {
+  padding-left: 1em;
+  float: right;
+}
+
+/* Define a custom icon */
+.ui-icon.custom-icon-firefox {
+  background-image: url(application_firefox.gif);
+  background-position: 0 0;
+}
+
+</style>
+
+<script>
+var CLIPBOARD;
+
+$(document).contextmenu({
+  delegate: ".hasmenu",
+  autoFocus: true,
+  preventContextMenuForPopup: true,
+  preventSelect: true,
+  taphold: true,
+  menu: [ {
+    title: "Size",
+    cmd: "paste",
+    disabled: true
+  }, {
+    title: "----"
+  }, {
+    title: "Color",
+    children: [{
+      title: "Default",
+       cmd: "Default"
+    }, {
+      title: "%Complete/ProjectStage",
+      cmd: "PerComplete"
+      
+    }, ]
+  }],
+  // Handle menu selection to implement a fake-clipboard
+  select: function(event, ui) {
+    var $target = ui.target;
+    switch (ui.cmd) {
+      case "copy":
+        CLIPBOARD = $target.text();
+        break
+      case "paste":
+        CLIPBOARD = "";
+        break
+    }
+    
+	$target.attr("cf", ui.cmd)
+		
+    // Optionally return false, to prevent closing the menu now
+  },
+  // Implement the beforeOpen callback to dynamically change the entries
+  beforeOpen: function(event, ui) {
+    var $menu = ui.menu,
+      $target = ui.target,
+      extraData = ui.extraData; // passed when menu was opened by call to open()
+
+    // console.log("beforeOpen", event, ui, event.originalEvent.type);
+
+    ui.menu.zIndex($(event.target).zIndex() + 1);
+
+   
+    // Optionally return false, to prevent opening the menu now
+  }
+});
+
+</script>
+
+
   </body>
 </html>
