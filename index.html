@@ -6,19 +6,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="/D3/css/bootstrap.min.css">
-	<link rel="stylesheet" href="/D3/css/semantic.css">
-	<link rel="stylesheet" href="/D3/css/select2.css">
+    <link rel="stylesheet" href="/TreeGrid/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/TreeGrid/css/semantic.css">
+	<link rel="stylesheet" href="/TreeGrid/css/select2.css">
 
-	<script src="/D3/js/jquery.js"></script>
-    <script src="/D3/js/popper.js"></script>
-    <script src="/D3/js/bootstrap.min.js" ></script>
-	<script src="/D3/js/semantic.js" ></script>
-	<script src="/D3/js/d3.min.v4.js"></script>
-	<script src="/D3/js/select2.js"></script>
-	 <script src="/D3/js/jquery_ui.js"></script>
-	 	 <script src="/D3/js/jquery_context.js"></script>
-<link rel="stylesheet" href="/D3/css/jquery_ui.css">
+	
+	<style>
+	#customers {
+	  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	  border-collapse: collapse;
+	  width: 100%;
+	}
+
+	
+	#customers td, #customers th {
+	  border: 1px solid #ddd;
+	  padding: 8px;
+	  ;
+	}
+
+	#customers tr:nth-child(even){background-color: #f2f2f2;}
+
+	#customers tr:hover {background-color: #ddd;}
+
+	#customers th {
+	  padding-top: 12px;
+	  padding-bottom: 12px;
+	  text-align: left;
+	  background-color: #4CAF50;
+	  color: white;
+	}
+	</style>
+
+
+	<script src=" /TreeGrid/js/jquery.js"></script>
+    <script src=" /TreeGrid/js/popper.js"></script>
+    <script src=" /TreeGrid/js/bootstrap.min.js" ></script>
+	<script src=" /TreeGrid/js/semantic.js" ></script>
+	<script src=" /TreeGrid/js/d3.min.v4.js"></script>
+	<script src=" /TreeGrid/js/select2.js"></script>
+	<script src=" /TreeGrid/js/jquery_ui.js"></script>
+	<script src=" /TreeGrid/js/jquery_context.js"></script>
+<link rel="stylesheet" href="/css/jquery_ui.css">
     <title>Representing Coobo Database using D3</title>
   </head>
   <script>
@@ -44,6 +73,60 @@
 	
 	
 	})
+	
+	$( '#TreeGrid' ).on( 'click', 'tr', function () {
+	
+	idactivate = $(this).attr('key')  
+	showchild = $(this).attr('showchild')
+	console.log(idactivate)
+	par = $(this)
+	$('*[id='+idactivate).each(function() {
+	if(showchild == "0")
+	{
+		console.log("In Show")
+	par.attr('showchild',"1")
+    $(this).show();
+	}
+	else
+	{
+		par.attr('showchild',"0")
+		$(this).hide();
+		idchild = $(this).attr('key')  
+		$(this).attr('showchild',"0")
+		$('*[id='+idchild).each(function() { 
+
+			$(this).hide(); 
+			idchild2 = $(this).attr('key') 
+			$(this).attr('showchild',"0")
+			$('*[id='+idchild2).each(function() {
+					$(this).hide(); 
+					idchild3 = $(this).attr('key') 
+					$(this).attr('showchild',"0")
+					$('*[id='+idchild3).each(function() {
+							$(this).hide();	   
+							idchild4 = $(this).attr('key') 
+							$(this).attr('showchild',"0")
+							$('*[id='+idchild4).each(function() {
+									$(this).hide();		
+									idchild5 = $(this).attr('key') 
+							$(this).attr('showchild',"0")
+							$('*[id='+idchild5).each(function() {
+									$(this).hide();		})
+									
+	  })})})})
+	 
+	}
+ });
+
+	})
+	
+	
+	
+	
+
+	
+	
+	
 	})
 	
   </script>
@@ -59,18 +142,31 @@ position: relative;
   
   }
   
-  .node {
-  cursor: pointer;
-}
+ 
+	
+	#TreeGrid {
+	  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	  border-collapse: collapse;
+	  width: 100%;
+	}
 
-.node:hover {
-  stroke: #000;
-  stroke-width: 1.5px;
-}
+	#TreeGrid td, #TreeGrid th {
+	  border: 1px solid #ddd;
+	  padding: 8px;
+	}
 
-.node--leaf {
-  fill: white;
-}
+	#TreeGrid tr:nth-child(even){background-color: #f2f2f2;}
+
+	#TreeGrid tr:hover {background-color: #ddd;}
+
+	#TreeGrid th {
+	  padding-top: 12px;
+	  padding-bottom: 12px;
+	  text-align: left;
+	  background-color: #4CAF50;
+	  color: white;
+	}
+	
 
 .label {
   font: 11px "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -102,6 +198,8 @@ div.tooltip {
 
 $(document).ready(function() {
     $('.js-example-basic-multiple').select2();
+	
+	
 });
 
 </script> 
@@ -134,23 +232,22 @@ $(document).ready(function() {
   
 </div>
 
- <span style="position:relative;top:25px"> Size: <select id='Metric'><option value='Scriptwriting'>Scriptwriting</option><option value='MediaFile'>MediaFile</option><option value='Production'>Production</option><option value='LengthofCoboo'>LengthofCoboo</option></select> </span>
-
+ 
 <button style="position:relative;display:inline-block;top:25px" type="button" class="btn btn-primary" onclick="GraphParameterChange()"> Generate Chart</button>
 	
 	
 	
 
-<div> Zoom :<div id='slider'></div> <div id='saveFilters'></div> <div id='loadFilters'></div> </div>
 
 
-<div id= 'PackCircle'> <svg id='PackCircleSVG' width="1200" height="1200"></svg> </div>
+
+<div id= 'TreeGrid'> </div>
 </div>
 <div style='position:relative;width:15%;display:none;vertical-align: top;'>
 <div> 
 <h1>Chart Attributes</h1>
 	Level-1:<br> Definition:<select id='Level1' onchange='LevelChange(1)'>  <option value='Grade'>Grade</option> <option value='Subject' selected>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles'>CooboTitles</option> </select> <br>Color: <select id='Color_L1'><option value='Default'>Default- Level</option><option value='PerComplete' selected>PerComplete</option></select>
-	<br><br>Level-2:<br> Definition:<select id='Level2' onchange='LevelChange(2)'>  <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit' selected>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles'>CooboTitles</option> </select><br> Color: <select id='Color_L2'><option value='Default'>Default- Level</option><option value='PerComplete' selected>PerComplete</option></select>
+	<br><br>Level-2:<br> Definition:<select id='Level2' onchange='LevelChange(2)'> <option value='None'>None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit' selected>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles'>CooboTitles</option> </select><br> Color: <select id='Color_L2'><option value='Default'>Default- Level</option><option value='PerComplete' selected>PerComplete</option></select>
 	<br><br>Level-3:<br> Definition:<select id='Level3' onchange='LevelChange(3)'> <option value='None'>None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter' selected>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles'>CooboTitles</option> </select> <br>Color: <select id='Color_L3'><option value='Default' selected>Default- Level</option><option value='PerComplete'>PerComplete</option></select>
 	<br><br>Level-4:<br> Definition:<select id='Level4' onchange='LevelChange(4)'> <option value='None'>None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic' selected>Topic</option>  <option value='Concept'>Concept</option> <option value='CooboTitles'>CooboTitles</option> </select><br> Color: <select id='Color_L4'><option value='Default' selected>Default- Level</option><option value='PerComplete'>PerComplete</option></select>
 	<br><br>Level-5:<br> Definition:<select id='Level5' onchange='LevelChange(5)'> <option value='None'>None</option> <option value='Grade'>Grade</option> <option value='Subject'>Subject</option>  <option value='Unit'>Unit</option> <option value='Chapter'>Chapter</option>  <option value='Topic'>Topic</option>  <option value='Concept' selected>Concept</option> <option value='CooboTitles'>CooboTitles</option> </select><br> Color: <select id='Color_L5'><option value='Default' selected>Default- Level</option><option value='PerComplete'>PerComplete</option></select>
@@ -195,9 +292,9 @@ GraphParameterChange()
 function GraphParameterChange()
 {
 
-var e = document.getElementById("Metric");
-var MericSel = e.options[e.selectedIndex].value;
 
+var HTMLOutput = []
+	
 	iter=1
 	$("#Level1").val("None")
 	$("#Level2").val("None")
@@ -207,20 +304,11 @@ var MericSel = e.options[e.selectedIndex].value;
 	$("#Level6").val("None")
 	$("#Level7").val("None")
 	
-	$("#Color_L1").val("None")
-	$("#Color_L2").val("None")
-	$("#Color_L3").val("None")
-	$("#Color_L4").val("None")
-	$("#Color_L5").val("None")
-	$("#Color_L6").val("None")
-	$("#Color_L7").val("None")
 	
  var we = document.getElementById('sortable').children
  for(i =0; i< we.length; i++)
  {
- 	console.log(we.item(i).attributes.active.value == "1")
-	console.log(we.item(i).attributes.active.value )
-	if(we.item(i).attributes.active.value == "1")
+ 	if(we.item(i).attributes.active.value == "1")
 	{
 	
 	$("#Level"+iter).val(we.item(i).id)
@@ -239,97 +327,80 @@ var Level1_sel = $("#Level1").val()
   var Level5_sel = $("#Level5").val()
   var Level6_sel = $("#Level6").val()
    var Level7_sel = $("#Level7").val()
-for(i=0; i< data.length; i++)
-{
-	if(MericSel == "Scriptwriting"){data[i]['Metric'] = data[i].Scriptwriting}
-	if(MericSel == "MediaFile"){data[i]['Metric'] = data[i].MediaFile}
-	if(MericSel == "Production"){data[i]['Metric'] = data[i].Production}
-	if(MericSel == "LengthofCoboo"){data[i]['Metric'] = data[i].LengthofCoboo}
-}
 		
-		
+	
 var data_k = data.map((e)=>{
   
-  if(Level3_sel == 'None'){return {"Level1":e[Level1_sel], "Level2":e[Level2_sel], "size": +e.Metric }}
-  if(Level4_sel == 'None'){return {"Level1":e[Level1_sel], "Level2":e[Level2_sel],"Level3":e[Level3_sel], "size": +e.Metric}}
-  if(Level5_sel == 'None'){return {"Level1":e[Level1_sel], "Level2":e[Level2_sel],"Level3":e[Level3_sel],"Level4":e[Level4_sel], "size": +e.Metric}}
-  if(Level5_sel == 'None'){return {"Level1":e[Level1_sel], "Level2":e[Level2_sel],"Level3":e[Level3_sel],"Level4":e[Level4_sel],"Level5":e[Level5_sel], "size": +e.Metric}}
-   if(Level6_sel == 'None'){return {"Level1":e[Level1_sel], "Level2":e[Level2_sel],"Level3":e[Level3_sel],"Level4":e[Level4_sel],"Level5":e[Level5_sel],"Level6":e[Level6_sel], "size": +e.Metric}}
- return {"Level1":e[Level1_sel], "Level2":e[Level2_sel],"Level3":e[Level3_sel],"Level4":e[Level4_sel],"Level5":e[Level5_sel],"Level6":e[Level6_sel],"Level7":e[Level7_sel], "size": +e.Metric}
+  if(Level3_sel == 'None'){return {"Level1":e[Level1_sel], "Level2":e[Level2_sel], "Scriptwriting": +e.Scriptwriting , "MediaFile": +e.MediaFile ,"Production": + e.Production , "LengthofCoboo": +e.LengthofCoboo }}
+  if(Level4_sel == 'None'){return {"Level1":e[Level1_sel], "Level2":e[Level2_sel],"Level3":e[Level3_sel], "Scriptwriting": +e.Scriptwriting , "MediaFile": +e.MediaFile ,"Production": + e.Production , "LengthofCoboo": +e.LengthofCoboo}}
+  if(Level5_sel == 'None'){return {"Level1":e[Level1_sel], "Level2":e[Level2_sel],"Level3":e[Level3_sel],"Level4":e[Level4_sel], "Scriptwriting": +e.Scriptwriting , "MediaFile": +e.MediaFile ,"Production": + e.Production , "LengthofCoboo": +e.LengthofCoboo}}
+  if(Level5_sel == 'None'){return {"Level1":e[Level1_sel], "Level2":e[Level2_sel],"Level3":e[Level3_sel],"Level4":e[Level4_sel],"Level5":e[Level5_sel], "Scriptwriting": +e.Scriptwriting , "MediaFile": +e.MediaFile ,"Production": + e.Production , "LengthofCoboo": +e.LengthofCoboo}}
+   if(Level6_sel == 'None'){return {"Level1":e[Level1_sel], "Level2":e[Level2_sel],"Level3":e[Level3_sel],"Level4":e[Level4_sel],"Level5":e[Level5_sel],"Level6":e[Level6_sel], "Scriptwriting": +e.Scriptwriting , "MediaFile": +e.MediaFile ,"Production": + e.Production , "LengthofCoboo": +e.LengthofCoboo}}
+ return {"Level1":e[Level1_sel], "Level2":e[Level2_sel],"Level3":e[Level3_sel],"Level4":e[Level4_sel],"Level5":e[Level5_sel],"Level6":e[Level6_sel],"Level7":e[Level7_sel], "Scriptwriting": +e.Scriptwriting , "MediaFile": +e.MediaFile ,"Production": + e.Production , "LengthofCoboo": +e.LengthofCoboo}
  })
 
- if(Level3_sel == 'None')
+ 
+  var nested_L1 = 
+	d3.nest()
+  .key(function(d) { return d.Level1; })
+  .rollup(function(v) {
+     return {
+	Scriptwriting: d3.sum(v, function(d) { return d.Scriptwriting; }),
+	MediaFile: d3.sum(v, function(d) { return d.MediaFile; }),
+	Production: d3.sum(v, function(d) { return d.Production; }),
+	LengthofCoboo: d3.sum(v, function(d) { return d.LengthofCoboo; })
+	}
+	
+  }).entries(data_k);
+  
+  
+ if(Level2_sel != 'None')
  {
  
- var nested = 
+ var nested_L1L2 = 
 	d3.nest()
   .key(function(d) { return d.Level1; })
   .key(function(d) { return d.Level2; })
   .rollup(function(v) {
      return {
-	 size: d3.sum(v, function(d) { return d.size; }),
+	Scriptwriting: d3.sum(v, function(d) { return d.Scriptwriting; }),
+	MediaFile: d3.sum(v, function(d) { return d.MediaFile; }),
+	Production: d3.sum(v, function(d) { return d.Production; }),
+	LengthofCoboo: d3.sum(v, function(d) { return d.LengthofCoboo; })
 	}
 	
   }).entries(data_k);
   
 
- 
- var root = {"name":"embibe", "children": []};
-		for(var i=0; i<nested.length; i++) {
-		result = {"name":nested[i].key,"children":[]}
-			for(var j=0; j<nested[i].values.length;j++)
-			{
-			result.children.push({"name":nested[i].values[j].key, "size": nested[i].values[j].value.size });
-				
-			
-			}
-			root.children.push(result)
-			
-		}
 	
 }		
  
- else if(Level4_sel == 'None')
+ if(Level3_sel != 'None')
  {
  
-
- var nested = 
+ var nested_L1L2L3 = 
 	d3.nest()
   .key(function(d) { return d.Level1; })
   .key(function(d) { return d.Level2; })
   .key(function(d) { return d.Level3; })
   .rollup(function(v) {
      return {
-	 size: d3.sum(v, function(d) { return d.size; }),
+	Scriptwriting: d3.sum(v, function(d) { return d.Scriptwriting; }),
+	MediaFile: d3.sum(v, function(d) { return d.MediaFile; }),
+	Production: d3.sum(v, function(d) { return d.Production; }),
+	LengthofCoboo: d3.sum(v, function(d) { return d.LengthofCoboo; })
 	}
 	
   }).entries(data_k);
   
- 
- var root = {"name":"embibe", "children": []};
-		for(var i=0; i<nested.length; i++) {
-		result = {"name":nested[i].key,"children":[]}
-			for(var j=0; j<nested[i].values.length;j++)
-			{
-			result.children.push({"name":nested[i].values[j].key, "children": [ ] });
-				for(var k=0; k<nested[i].values[j].values.length;k++)
-				{
-				result.children[j].children.push({"name":nested[i].values[j].values[k].key, "size":nested[i].values[j].values[k].value.size });
-				}
-				
-			}
-			root.children.push(result)
-			
-		}
-	
 
-}		
- 
- else if(Level5_sel == 'None')
+	
+}	
+
+if(Level4_sel != 'None')
  {
  
-
- var nested = 
+ var nested_L1L2L3L4 = 
 	d3.nest()
   .key(function(d) { return d.Level1; })
   .key(function(d) { return d.Level2; })
@@ -337,88 +408,50 @@ var data_k = data.map((e)=>{
   .key(function(d) { return d.Level4; })
   .rollup(function(v) {
      return {
-	 size: d3.sum(v, function(d) { return d.size; }),
+	Scriptwriting: d3.sum(v, function(d) { return d.Scriptwriting; }),
+	MediaFile: d3.sum(v, function(d) { return d.MediaFile; }),
+	Production: d3.sum(v, function(d) { return d.Production; }),
+	LengthofCoboo: d3.sum(v, function(d) { return d.LengthofCoboo; })
 	}
 	
   }).entries(data_k);
   
- 
- var root = {"name":"embibe", "children": []};
-		for(var i=0; i<nested.length; i++) {
-		result = {"name":nested[i].key,"children":[]}
-			for(var j=0; j<nested[i].values.length;j++)
-			{
-			result.children.push({"name":nested[i].values[j].key, "children": [ ] });
-				for(var k=0; k<nested[i].values[j].values.length;k++)
-				{
-				result.children[j].children.push({"name":nested[i].values[j].values[k].key,  "children": [ ] });
-				for(var l=0; l<nested[i].values[j].values[k].values.length;l++)
-				{
-					result.children[j].children[k].children.push({"name":nested[i].values[j].values[k].values[l].key, "size":nested[i].values[j].values[k].values[l].value.size });
-			
-				}
-				}
-				
-			}
-			root.children.push(result)
-			
-		}
+
 	
+}	
 
-}
-
-
-else if(Level6_sel == 'None')
+if(Level5_sel != 'None')
  {
  
-
- var nested = 
+ var nested_L1L2L3L4L5 = 
 	d3.nest()
   .key(function(d) { return d.Level1; })
   .key(function(d) { return d.Level2; })
   .key(function(d) { return d.Level3; })
   .key(function(d) { return d.Level4; })
-  .key(function(d) { return d.Level5; })
+   .key(function(d) { return d.Level5; })
   .rollup(function(v) {
      return {
-	 size: d3.sum(v, function(d) { return d.size; }),
+	Scriptwriting: d3.sum(v, function(d) { return d.Scriptwriting; }),
+	MediaFile: d3.sum(v, function(d) { return d.MediaFile; }),
+	Production: d3.sum(v, function(d) { return d.Production; }),
+	LengthofCoboo: d3.sum(v, function(d) { return d.LengthofCoboo; })
 	}
 	
   }).entries(data_k);
   
- 
- var root = {"name":"embibe", "children": []};
-		for(var i=0; i<nested.length; i++) {
-		result = {"name":nested[i].key,"children":[]}
-			for(var j=0; j<nested[i].values.length;j++)
-			{
-			result.children.push({"name":nested[i].values[j].key, "children": [ ] });
-				for(var k=0; k<nested[i].values[j].values.length;k++)
-				{
-				result.children[j].children.push({"name":nested[i].values[j].values[k].key,  "children": [ ] });
-				for(var l=0; l<nested[i].values[j].values[k].values.length;l++)
-				{
-				result.children[j].children[k].children.push({"name":nested[i].values[j].values[k].values[l].key,  "children": [ ] });
-				for(var m=0; m<nested[i].values[j].values[k].values[l].values.length;m++)
-				{
-					result.children[j].children[k].children[l].children.push({"name":nested[i].values[j].values[k].values[l].values[m].key, "size":nested[i].values[j].values[k].values[l].values[m].value.size });
-				}
-				}
-				}
-				
-			}
-			root.children.push(result)
-			
-		}
+
 	
+}	
 
-}
 
-else if(Level7_sel == 'None')
+
+if(Level6_sel != 'None')
  {
  
+ 
 
- var nested = 
+ var nested_L1L2L3L4L5L6 = 
 	d3.nest()
   .key(function(d) { return d.Level1; })
   .key(function(d) { return d.Level2; })
@@ -426,49 +459,24 @@ else if(Level7_sel == 'None')
   .key(function(d) { return d.Level4; })
   .key(function(d) { return d.Level5; })
   .key(function(d) { return d.Level6; })
-  
   .rollup(function(v) {
      return {
-	 size: d3.sum(v, function(d) { return d.size; }),
+	Scriptwriting: d3.sum(v, function(d) { return d.Scriptwriting; }),
+	MediaFile: d3.sum(v, function(d) { return d.MediaFile; }),
+	Production: d3.sum(v, function(d) { return d.Production; }),
+	LengthofCoboo: d3.sum(v, function(d) { return d.LengthofCoboo; })
 	}
 	
   }).entries(data_k);
   
- 
- var root = {"name":"embibe", "children": []};
-		for(var i=0; i<nested.length; i++) {
-		result = {"name":nested[i].key,"children":[]}
-			for(var j=0; j<nested[i].values.length;j++)
-			{
-			result.children.push({"name":nested[i].values[j].key, "children": [ ] });
-				for(var k=0; k<nested[i].values[j].values.length;k++)
-				{
-				result.children[j].children.push({"name":nested[i].values[j].values[k].key,  "children": [ ] });
-				for(var l=0; l<nested[i].values[j].values[k].values.length;l++)
-				{
-				result.children[j].children[k].children.push({"name":nested[i].values[j].values[k].values[l].key,  "children": [ ] });
-				for(var m=0; m<nested[i].values[j].values[k].values[l].values.length;m++)
-				{
-				result.children[j].children[k].children[l].children.push({"name":nested[i].values[j].values[k].values[l].values[m].key,  "children": [ ] });
-				for(var n=0; n<nested[i].values[j].values[k].values[l].values[m].values.length;n++)
-				{
-					result.children[j].children[k].children[l].children[m].children.push({"name":nested[i].values[j].values[k].values[l].values[m].values[n].key, "size":nested[i].values[j].values[k].values[l].values[m].values[n].value.size });
-				}
-				}
-				}
-				}
-				
-			}
-			root.children.push(result)
-			
-		}
-	
 
+	
 }
 
-else
-{
-var nested = 
+if(Level7_sel != 'None')
+ {
+ 
+ var nested_L1L2L3L4L5L6L7 = 
 	d3.nest()
   .key(function(d) { return d.Level1; })
   .key(function(d) { return d.Level2; })
@@ -479,135 +487,427 @@ var nested =
   .key(function(d) { return d.Level7; })
   .rollup(function(v) {
      return {
-	 size: d3.sum(v, function(d) { return d.size; }),
+	Scriptwriting: d3.sum(v, function(d) { return d.Scriptwriting; }),
+	MediaFile: d3.sum(v, function(d) { return d.MediaFile; }),
+	Production: d3.sum(v, function(d) { return d.Production; }),
+	LengthofCoboo: d3.sum(v, function(d) { return d.LengthofCoboo; })
 	}
 	
   }).entries(data_k);
-  
- 
- var root = {"name":"embibe", "children": []};
-		for(var i=0; i<nested.length; i++) {
-		result = {"name":nested[i].key,"children":[]}
-			for(var j=0; j<nested[i].values.length;j++)
+  }
+if(Level2_sel == 'None')
+{
+HTMLOutput = "<table style='position:relative;top:50px;left:50px' ><tr> <td>Key</td><td>Length Of Coobo</td><td>Media File</td><td>Production</td><td>Script Writing</td></tr>"
+
+	
+
+			for(i = 0; i< nested_L1.length;i++)
+	{
+	 
+		HTMLOutput = HTMLOutput + "<tr class='t_level1'  showchild='0'  key='L1_"+i+"' > <td  style='width: 250px; '>" + nested_L1[i].key + "</td><td style='text-align:center'>" + nested_L1[i].value.LengthofCoboo  +"</td><td style='text-align:center'>" + nested_L1[i].value.Scriptwriting  +"</td><td style='text-align:center'>" + nested_L1[i].value.MediaFile  +"</td><td style='text-align:center'>" + nested_L1[i].value.Production +"</td></tr>"
+		
+	}
+
+}
+
+else if(Level3_sel == 'None')
+{
+
+
+HTMLOutput = "<table style='position:relative;top:50px;left:50px'><tr> <td >Key</td><td>Length Of Coobo</td><td>Media File</td><td>Production</td><td>Script Writing</td></tr>"
+
+
+			for(i = 0; i< nested_L1.length;i++)
+	{
+	 
+		HTMLOutput = HTMLOutput + "<tr class='t_level1'  showchild='0'  key='L1_"+i+"' > <td  style='width: 250px; '>" + nested_L1[i].key + "</td><td style='text-align:center'>" + nested_L1[i].value.LengthofCoboo  +"</td><td style='text-align:center'>" + nested_L1[i].value.Scriptwriting  +"</td><td style='text-align:center'>" + nested_L1[i].value.MediaFile  +"</td><td style='text-align:center'>" + nested_L1[i].value.Production +"</td></tr>"
+		temp = nested_L1L2.filter(function(d) {  return d.key ==  nested_L1[i].key})
+	    temp =temp[0]
+		for(j = 0; j< temp.values.length; j++)
+		{
+		HTMLOutput = HTMLOutput + "<tr class='t_level2' style='display:none' showchild='0' key='L2_"+i+"_"+j+"' id='L1_"+i+"'> <td style='width:250px ; '  >&nbsp;&nbsp-" + temp.values[j].key + "</td><td style='text-align:center'>" + temp.values[j].value.LengthofCoboo  +"</td><td style='text-align:center'>" + temp.values[j].value.Scriptwriting  +"</td><td style='text-align:center'>" + temp.values[j].value.MediaFile  +"</td><td style='text-align:center'>" + temp.values[j].value.Production +"</td></tr>"
+		}
+	
+	}
+	
+}
+
+
+else if(Level4_sel == 'None')
+{
+HTMLOutput = "<table style='position:relative;top:50px;left:50px'><tr>  <td>Key</td> <td>Length Of Coobo</td><td>Media File</td><td>Production</td><td>Script Writing</td></tr>"
+
+
+		
+
+		for(i = 0; i< nested_L1.length;i++)
+	{
+	 
+		HTMLOutput = HTMLOutput + "<tr class='t_level1'  showchild='0'  key='L1_"+i+"' > <td  style='width: 250px; '>" + nested_L1[i].key + "</td><td style='text-align:center'>" + nested_L1[i].value.LengthofCoboo  +"</td><td style='text-align:center'>" + nested_L1[i].value.Scriptwriting  +"</td><td style='text-align:center'>" + nested_L1[i].value.MediaFile  +"</td><td style='text-align:center'>" + nested_L1[i].value.Production +"</td></tr>"
+		temp = nested_L1L2.filter(function(d) {  return d.key ==  nested_L1[i].key})
+	    temp =temp[0]
+		for(j = 0; j< temp.values.length; j++)
+		{
+		HTMLOutput = HTMLOutput + "<tr class='t_level2' style='display:none' showchild='0' key='L2_"+i+"_"+j+"' id='L1_"+i+"'> <td style='width:250px ; '  >&nbsp;&nbsp-" + temp.values[j].key + "</td><td style='text-align:center'>" + temp.values[j].value.LengthofCoboo  +"</td><td style='text-align:center'>" + temp.values[j].value.Scriptwriting  +"</td><td style='text-align:center'>" + temp.values[j].value.MediaFile  +"</td><td style='text-align:center'>" + temp.values[j].value.Production +"</td></tr>"
+		temp2 = nested_L1L2L3.filter(function(d) {  return d.key ==  nested_L1[i].key})
+	  
+		temp2 =temp2[0].values
+	
+		temp2 = temp2.filter(function(d) {  return d.key ==  temp.values[j].key})
+		temp2 = temp2[0].values
+	  
+			for(k = 0; k< temp2.length; k++)
 			{
-			result.children.push({"name":nested[i].values[j].key, "children": [ ] });
-				for(var k=0; k<nested[i].values[j].values.length;k++)
-				{
-				result.children[j].children.push({"name":nested[i].values[j].values[k].key,  "children": [ ] });
-				for(var l=0; l<nested[i].values[j].values[k].values.length;l++)
-				{
-				result.children[j].children[k].children.push({"name":nested[i].values[j].values[k].values[l].key,  "children": [ ] });
-				for(var m=0; m<nested[i].values[j].values[k].values[l].values.length;m++)
-				{
-				result.children[j].children[k].children[l].children.push({"name":nested[i].values[j].values[k].values[l].values[m].key,  "children": [ ] });
-				for(var n=0; n<nested[i].values[j].values[k].values[l].values[m].values.length;n++)
-				{
-				result.children[j].children[k].children[l].children[m].children.push({"name":nested[i].values[j].values[k].values[l].values[m].values[n].key,  "children": [ ] });
-				for(var o=0; o<nested[i].values[j].values[k].values[l].values[m].values[n].values.length;o++)
-				{
-					result.children[j].children[k].children[l].children[m].children[n].children.push({"name":nested[i].values[j].values[k].values[l].values[m].values[n].values[o].key, "size":nested[i].values[j].values[k].values[l].values[m].values[n].values[o].value.size });
-				}
-				}
-				}
-				}
-				}
-				
+			HTMLOutput = HTMLOutput + "<tr class='t_level3' showchild='0'  style='display:none' key='L3_"+i+"_"+j+"_"+k+"' id='L2_"+i+"_"+j+"' > <td style='width:350px; ' >&nbsp;&nbsp;&nbsp;&nbsp--" + temp2[k].key + "</td><td style='text-align:center'>" +temp2[k].value.LengthofCoboo  +"</td><td style='text-align:center'>" + temp2[k].value.Scriptwriting  +"</td><td style='text-align:center'>" + temp2[k].value.MediaFile  +"</td><td style='text-align:center'>" + temp2[k].value.Production +"</td></tr>"
 			}
-			root.children.push(result)
+		}
+	
+	}
+
+}
+	
+	
+else if(Level5_sel == 'None')
+{
+HTMLOutput = "<table style='position:relative;top:50px;left:50px'><tr> <td >Key</td><td>Length Of Coobo</td><td>Media File</td><td>Production</td><td>Script Writing</td></tr>"
+
+var result = []
+
+
+	
+
+		for(i = 0; i< nested_L1.length;i++)
+	{
+	 
+		HTMLOutput = HTMLOutput + "<tr class='t_level1'  showchild='0'  key='L1_"+i+"' > <td  style='width: 250px; '>" + nested_L1[i].key + "</td><td style='text-align:center'>" + nested_L1[i].value.LengthofCoboo  +"</td><td style='text-align:center'>" + nested_L1[i].value.Scriptwriting  +"</td><td style='text-align:center'>" + nested_L1[i].value.MediaFile  +"</td><td style='text-align:center'>" + nested_L1[i].value.Production +"</td></tr>"
+		temp = nested_L1L2.filter(function(d) {  return d.key ==  nested_L1[i].key})
+	    temp =temp[0]
+		for(j = 0; j< temp.values.length; j++)
+		{
+		HTMLOutput = HTMLOutput + "<tr class='t_level2' style='display:none' showchild='0' key='L2_"+i+"_"+j+"' id='L1_"+i+"'> <td style='width:250px ; '  >&nbsp;&nbsp-" + temp.values[j].key + "</td><td style='text-align:center'>" + temp.values[j].value.LengthofCoboo  +"</td><td style='text-align:center'>" + temp.values[j].value.Scriptwriting  +"</td><td style='text-align:center'>" + temp.values[j].value.MediaFile  +"</td><td style='text-align:center'>" + temp.values[j].value.Production +"</td></tr>"
+		temp2 = nested_L1L2L3.filter(function(d) {  return d.key ==  nested_L1[i].key})
+	  
+		temp2 =temp2[0].values
+	
+		temp2 = temp2.filter(function(d) {  return d.key ==  temp.values[j].key})
+		temp2 = temp2[0].values
+	  
+			for(k = 0; k< temp2.length; k++)
+			{
+			HTMLOutput = HTMLOutput + "<tr class='t_level3' showchild='0'  style='display:none' key='L3_"+i+"_"+j+"_"+k+"' id='L2_"+i+"_"+j+"' > <td style='width:350px; ' >&nbsp;&nbsp;&nbsp;&nbsp--" + temp2[k].key + "</td><td style='text-align:center'>" +temp2[k].value.LengthofCoboo  +"</td><td style='text-align:center'>" + temp2[k].value.Scriptwriting  +"</td><td style='text-align:center'>" + temp2[k].value.MediaFile  +"</td><td style='text-align:center'>" + temp2[k].value.Production +"</td></tr>"
+			
+				temp3 = nested_L1L2L3L4.filter(function(d) {  return d.key ==  nested_L1[i].key})
+				temp3 =temp3[0].values
+				temp3 = temp3.filter(function(d) {  return d.key ==  temp.values[j].key})
+				
+				temp3 = temp3[0].values
+			
+				temp3 = temp3.filter(function(d) {  return d.key ==  temp2[k].key})
+				
+				temp3 = temp3[0].values
+	 
+			for(l = 0; l< temp3.length; l++)
+			{
+			
+		   HTMLOutput = HTMLOutput + "<tr class='t_level4' showchild='0'  key='L4_"+i+"_"+j+"_"+k+"_"+l+"'  id='L3_"+i+"_"+j+"_"+k+"' style='display:none' > <td style='width:350px;' >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp---" + temp3[l].key + "</td><td style='text-align:center'>" +temp3[l].value.LengthofCoboo  +"</td><td style='text-align:center'>" + temp3[l].value.Scriptwriting  +"</td><td style='text-align:center'>" + temp3[l].value.MediaFile  +"</td><td style='text-align:center'>" + temp3[l].value.Production +"</td></tr>"
+		
+		    }
+		
+		
+			}
+		}
+	
+	}
+	
+	
+}
+	
+
+
+
+ else if(Level6_sel == 'None')
+{
+HTMLOutput = "<table style='position:relative;top:50px;left:50px'><tr> <td >Key</td><td>Length Of Coobo</td><td>Media File</td><td>Production</td><td>Script Writing</td></tr>"
+
+
+
+
+		for(i = 0; i< nested_L1.length;i++)
+	{
+	 
+		HTMLOutput = HTMLOutput + "<tr class='t_level1'  showchild='0'  key='L1_"+i+"' > <td  style='width: 250px; '>" + nested_L1[i].key + "</td><td style='text-align:center'>" + nested_L1[i].value.LengthofCoboo  +"</td><td style='text-align:center'>" + nested_L1[i].value.Scriptwriting  +"</td><td style='text-align:center'>" + nested_L1[i].value.MediaFile  +"</td><td style='text-align:center'>" + nested_L1[i].value.Production +"</td></tr>"
+		temp = nested_L1L2.filter(function(d) {  return d.key ==  nested_L1[i].key})
+	    temp =temp[0]
+		for(j = 0; j< temp.values.length; j++)
+		{
+		HTMLOutput = HTMLOutput + "<tr class='t_level2' style='display:none' showchild='0' key='L2_"+i+"_"+j+"' id='L1_"+i+"'> <td style='width:250px ; '  >&nbsp;&nbsp-" + temp.values[j].key + "</td><td style='text-align:center'>" + temp.values[j].value.LengthofCoboo  +"</td><td style='text-align:center'>" + temp.values[j].value.Scriptwriting  +"</td><td style='text-align:center'>" + temp.values[j].value.MediaFile  +"</td><td style='text-align:center'>" + temp.values[j].value.Production +"</td></tr>"
+		temp2 = nested_L1L2L3.filter(function(d) {  return d.key ==  nested_L1[i].key})
+	  
+		temp2 =temp2[0].values
+	
+		temp2 = temp2.filter(function(d) {  return d.key ==  temp.values[j].key})
+		temp2 = temp2[0].values
+	  
+			for(k = 0; k< temp2.length; k++)
+			{
+			HTMLOutput = HTMLOutput + "<tr class='t_level3' showchild='0'  style='display:none' key='L3_"+i+"_"+j+"_"+k+"' id='L2_"+i+"_"+j+"' > <td style='width:350px; ' >&nbsp;&nbsp;&nbsp;&nbsp--" + temp2[k].key + "</td><td style='text-align:center'>" +temp2[k].value.LengthofCoboo  +"</td><td style='text-align:center'>" + temp2[k].value.Scriptwriting  +"</td><td style='text-align:center'>" + temp2[k].value.MediaFile  +"</td><td style='text-align:center'>" + temp2[k].value.Production +"</td></tr>"
+			
+				temp3 = nested_L1L2L3L4.filter(function(d) {  return d.key ==  nested_L1[i].key})
+				temp3 =temp3[0].values
+				temp3 = temp3.filter(function(d) {  return d.key ==  temp.values[j].key})
+				
+				temp3 = temp3[0].values
+			
+				temp3 = temp3.filter(function(d) {  return d.key ==  temp2[k].key})
+				
+				temp3 = temp3[0].values
+	 
+			for(l = 0; l< temp3.length; l++)
+			{
+			
+		   HTMLOutput = HTMLOutput + "<tr class='t_level4' showchild='0'  key='L4_"+i+"_"+j+"_"+k+"_"+l+"'  id='L3_"+i+"_"+j+"_"+k+"' style='display:none' > <td style='width:350px;' >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp---" + temp3[l].key + "</td><td style='text-align:center'>" +temp3[l].value.LengthofCoboo  +"</td><td style='text-align:center'>" + temp3[l].value.Scriptwriting  +"</td><td style='text-align:center'>" + temp3[l].value.MediaFile  +"</td><td style='text-align:center'>" + temp3[l].value.Production +"</td></tr>"
+		
+			temp4 = nested_L1L2L3L4L5.filter(function(d) {  return d.key ==  nested_L1[i].key})
+			temp4 =temp4[0].values
+			temp4 = temp4.filter(function(d) {  return d.key ==  temp.values[j].key})
+			temp4 = temp4[0].values
+			temp4 = temp4.filter(function(d) {  return d.key ==  temp2[k].key})
+			temp4 = temp4[0].values
+			temp4 = temp4.filter(function(d) {  return d.key ==  temp3[l].key})
+			temp4 = temp4[0].values
+		
+		
+		for(m = 0; m< temp4.length; m++)
+			{
+			
+			HTMLOutput = HTMLOutput + "<tr class='t_level5' showchild='0'  style='display:none' key='L5_"+i+"_"+j+"_"+k+"_"+l+"_"+m+"'  id = 'L4_"+i+"_"+j+"_"+k+"_"+l+"' > <td style='width:350px;' >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----" + temp4[m].key + "</td><td style='text-align:center'>" +temp4[m].value.LengthofCoboo  +"</td><td style='text-align:center'>" + temp4[m].value.Scriptwriting  +"</td><td style='text-align:center'>" + temp4[m].value.MediaFile  +"</td><td style='text-align:center'>" + temp4[m].value.Production +"</td></tr>"
+				}
+	
+		
+		
+		    }
+		
+		
+			}
+		}
+	
+	}
+	
+	
+}
+	
+
+ else if(Level7_sel == 'None')
+{
+
+HTMLOutput = "<table style='position:relative;top:50px;left:50px'><tr  > <td >Key</td><td>Length Of Coobo</td><td>Media File</td><td>Production</td><td>Script Writing</td></tr>"
+
+
+
+
+		for(i = 0; i< nested_L1.length;i++)
+	{
+	 
+		HTMLOutput = HTMLOutput + "<tr class='t_level1'  showchild='0'  key='L1_"+i+"' > <td  style='width: 250px; '>" + nested_L1[i].key + "</td><td style='text-align:center'>" + nested_L1[i].value.LengthofCoboo  +"</td><td style='text-align:center'>" + nested_L1[i].value.Scriptwriting  +"</td><td style='text-align:center'>" + nested_L1[i].value.MediaFile  +"</td><td style='text-align:center'>" + nested_L1[i].value.Production +"</td></tr>"
+		temp = nested_L1L2.filter(function(d) {  return d.key ==  nested_L1[i].key})
+	    temp =temp[0]
+		for(j = 0; j< temp.values.length; j++)
+		{
+		HTMLOutput = HTMLOutput + "<tr class='t_level2' style='display:none' showchild='0' key='L2_"+i+"_"+j+"' id='L1_"+i+"'> <td style='width:250px ; '  >&nbsp;&nbsp-" + temp.values[j].key + "</td><td style='text-align:center'>" + temp.values[j].value.LengthofCoboo  +"</td><td style='text-align:center'>" + temp.values[j].value.Scriptwriting  +"</td><td style='text-align:center'>" + temp.values[j].value.MediaFile  +"</td><td style='text-align:center'>" + temp.values[j].value.Production +"</td></tr>"
+		temp2 = nested_L1L2L3.filter(function(d) {  return d.key ==  nested_L1[i].key})
+	  
+		temp2 =temp2[0].values
+	
+		temp2 = temp2.filter(function(d) {  return d.key ==  temp.values[j].key})
+		temp2 = temp2[0].values
+	  
+			for(k = 0; k< temp2.length; k++)
+			{
+			HTMLOutput = HTMLOutput + "<tr class='t_level3' showchild='0'  style='display:none' key='L3_"+i+"_"+j+"_"+k+"' id='L2_"+i+"_"+j+"' > <td style='width:350px; ' >&nbsp;&nbsp;&nbsp;&nbsp--" + temp2[k].key + "</td><td style='text-align:center'>" +temp2[k].value.LengthofCoboo  +"</td><td style='text-align:center'>" + temp2[k].value.Scriptwriting  +"</td><td style='text-align:center'>" + temp2[k].value.MediaFile  +"</td><td style='text-align:center'>" + temp2[k].value.Production +"</td></tr>"
+			
+				temp3 = nested_L1L2L3L4.filter(function(d) {  return d.key ==  nested_L1[i].key})
+				temp3 =temp3[0].values
+				temp3 = temp3.filter(function(d) {  return d.key ==  temp.values[j].key})
+				
+				temp3 = temp3[0].values
+			
+				temp3 = temp3.filter(function(d) {  return d.key ==  temp2[k].key})
+				
+				temp3 = temp3[0].values
+	 
+			for(l = 0; l< temp3.length; l++)
+			{
+			
+		   HTMLOutput = HTMLOutput + "<tr class='t_level4' showchild='0'  key='L4_"+i+"_"+j+"_"+k+"_"+l+"'  id='L3_"+i+"_"+j+"_"+k+"' style='display:none' > <td style='width:350px;' >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp---" + temp3[l].key + "</td><td style='text-align:center'>" +temp3[l].value.LengthofCoboo  +"</td><td style='text-align:center'>" + temp3[l].value.Scriptwriting  +"</td><td style='text-align:center'>" + temp3[l].value.MediaFile  +"</td><td style='text-align:center'>" + temp3[l].value.Production +"</td></tr>"
+		
+			temp4 = nested_L1L2L3L4L5.filter(function(d) {  return d.key ==  nested_L1[i].key})
+			temp4 =temp4[0].values
+			temp4 = temp4.filter(function(d) {  return d.key ==  temp.values[j].key})
+			temp4 = temp4[0].values
+			temp4 = temp4.filter(function(d) {  return d.key ==  temp2[k].key})
+			temp4 = temp4[0].values
+			temp4 = temp4.filter(function(d) {  return d.key ==  temp3[l].key})
+			temp4 = temp4[0].values
+		
+		
+		for(m = 0; m< temp4.length; m++)
+			{
+			
+			HTMLOutput = HTMLOutput + "<tr class='t_level5' showchild='0'  style='display:none' key='L5_"+i+"_"+j+"_"+k+"_"+l+"_"+m+"'  id = 'L4_"+i+"_"+j+"_"+k+"_"+l+"' > <td style='width:350px;' >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----" + temp4[m].key + "</td><td style='text-align:center'>" +temp4[m].value.LengthofCoboo  +"</td><td style='text-align:center'>" + temp4[m].value.Scriptwriting  +"</td><td style='text-align:center'>" + temp4[m].value.MediaFile  +"</td><td style='text-align:center'>" + temp4[m].value.Production +"</td></tr>"
+				
+			temp5 = nested_L1L2L3L4L5L6.filter(function(d) {  return d.key ==  nested_L1[i].key})
+			temp5 =temp5[0].values
+			temp5 = temp5.filter(function(d) {  return d.key ==  temp.values[j].key})
+			temp5 = temp5[0].values
+			temp5 = temp5.filter(function(d) {  return d.key ==  temp2[k].key})
+			temp5 = temp5[0].values
+			temp5 = temp5.filter(function(d) {  return d.key ==  temp3[l].key})
+			temp5 = temp5[0].values
+			temp5 = temp5.filter(function(d) {  return d.key ==  temp4[m].key})
+			temp5 = temp5[0].values
+		for(n = 0; n< temp5.length; n++)
+			{
+			HTMLOutput = HTMLOutput + "<tr class='t_level6' showchild='0'  id= 'L5_"+i+"_"+j+"_"+k+"_"+l+"_"+m+"'  style='display:none'  key = 'L6_"+i+"_"+j+"_"+k+"_"+l+"_"+n+"'  > <td style='width:350px;' >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp-----" + temp5[n].key + "</td><td style='text-align:center'>" +temp5[n].value.LengthofCoboo  +"</td><td style='text-align:center'>" 
+			+ temp5[n].value.Scriptwriting  +"</td><td style='text-align:center'>" + temp5[n].value.MediaFile  +"</td><td style='text-align:center'>" + temp5[n].value.Production +"</td></tr>"
+			
+				
+			
+			
+			}
+		
 			
 		}
 	
-}
-
- Color_L1 = $('#Color_L1').val()
- Color_L2 = $('#Color_L2').val()
- Color_L3 = $('#Color_L3').val()
- Color_L4 = $('#Color_L4').val()
- Color_L5 = $('#Color_L5').val()
- Color_L6 = $('#Color_L6').val()
-  Color_L7 = $('#Color_L7').val()
- 
- var colorRange = d3.scaleLinear()
-    .domain([0, 100])
-    .range(["hsl(4, 100%, 45%)", "hsl(130, 100%, 11%)"])
-    .interpolate(d3.interpolateHcl);
+		
+		
+		    }
+		
+		
+			}
+		}
 	
-	
-
-
-
-
-function getnodecolor_final(Level_sel, Color_Level)
-{
-
-colorval =	d3.nest()
-  .key(function(d) { return d[Level_sel]; })
-  .rollup(function(v) {
-     return {
-	 color: colorRange(Math.round(v.filter(function(d) { return d.Stage == 4 }).length*100 /  v.length))
 	}
-}).entries(data);
+	
+	
+}
+ 
 
-
-if(Level_sel =="CooboTitles")
+  else 
 {
+HTMLOutput = "<table style='position:relative;top:50px;left:50px' ><tr style='background-color:#002248; color:white;text-align:center'> <td  >Key</td><td>Length Of Coobo</td><td>Media File</td><td>Production</td><td>Script Writing</td></tr>"
 
-colorval = 
-	d3.nest()
-  .key(function(d) { return d[Level_sel]; })
-  .rollup(function(v) {
-     return {
-		 color: colorRange2(d3.mean(v, function(d) { return d.Stage; }))
+
+		for(i = 0; i< nested_L1.length;i++)
+	{
 	 
+		HTMLOutput = HTMLOutput + "<tr class='t_level1'  showchild='0'  key='L1_"+i+"' > <td  style='width: 250px; '>" + nested_L1[i].key + "</td><td style='text-align:center'>" + nested_L1[i].value.LengthofCoboo  +"</td><td style='text-align:center'>" + nested_L1[i].value.Scriptwriting  +"</td><td style='text-align:center'>" + nested_L1[i].value.MediaFile  +"</td><td style='text-align:center'>" + nested_L1[i].value.Production +"</td></tr>"
+		temp = nested_L1L2.filter(function(d) {  return d.key ==  nested_L1[i].key})
+	    temp =temp[0]
+		for(j = 0; j< temp.values.length; j++)
+		{
+		HTMLOutput = HTMLOutput + "<tr class='t_level2' style='display:none' showchild='0' key='L2_"+i+"_"+j+"' id='L1_"+i+"'> <td style='width:250px ; '  >&nbsp;&nbsp-" + temp.values[j].key + "</td><td style='text-align:center'>" + temp.values[j].value.LengthofCoboo  +"</td><td style='text-align:center'>" + temp.values[j].value.Scriptwriting  +"</td><td style='text-align:center'>" + temp.values[j].value.MediaFile  +"</td><td style='text-align:center'>" + temp.values[j].value.Production +"</td></tr>"
+		temp2 = nested_L1L2L3.filter(function(d) {  return d.key ==  nested_L1[i].key})
+	  
+		temp2 =temp2[0].values
+	
+		temp2 = temp2.filter(function(d) {  return d.key ==  temp.values[j].key})
+		temp2 = temp2[0].values
+	  
+			for(k = 0; k< temp2.length; k++)
+			{
+			HTMLOutput = HTMLOutput + "<tr class='t_level3' showchild='0'  style='display:none' key='L3_"+i+"_"+j+"_"+k+"' id='L2_"+i+"_"+j+"' > <td style='width:350px; ' >&nbsp;&nbsp;&nbsp;&nbsp--" + temp2[k].key + "</td><td style='text-align:center'>" +temp2[k].value.LengthofCoboo  +"</td><td style='text-align:center'>" + temp2[k].value.Scriptwriting  +"</td><td style='text-align:center'>" + temp2[k].value.MediaFile  +"</td><td style='text-align:center'>" + temp2[k].value.Production +"</td></tr>"
+			
+				temp3 = nested_L1L2L3L4.filter(function(d) {  return d.key ==  nested_L1[i].key})
+				temp3 =temp3[0].values
+				temp3 = temp3.filter(function(d) {  return d.key ==  temp.values[j].key})
+				
+				temp3 = temp3[0].values
+			
+				temp3 = temp3.filter(function(d) {  return d.key ==  temp2[k].key})
+				
+				temp3 = temp3[0].values
+	 
+			for(l = 0; l< temp3.length; l++)
+			{
+			
+		   HTMLOutput = HTMLOutput + "<tr class='t_level4' showchild='0'  key='L4_"+i+"_"+j+"_"+k+"_"+l+"'  id='L3_"+i+"_"+j+"_"+k+"' style='display:none' > <td style='width:350px;' >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp---" + temp3[l].key + "</td><td style='text-align:center'>" +temp3[l].value.LengthofCoboo  +"</td><td style='text-align:center'>" + temp3[l].value.Scriptwriting  +"</td><td style='text-align:center'>" + temp3[l].value.MediaFile  +"</td><td style='text-align:center'>" + temp3[l].value.Production +"</td></tr>"
+		
+			temp4 = nested_L1L2L3L4L5.filter(function(d) {  return d.key ==  nested_L1[i].key})
+			temp4 =temp4[0].values
+			temp4 = temp4.filter(function(d) {  return d.key ==  temp.values[j].key})
+			temp4 = temp4[0].values
+			temp4 = temp4.filter(function(d) {  return d.key ==  temp2[k].key})
+			temp4 = temp4[0].values
+			temp4 = temp4.filter(function(d) {  return d.key ==  temp3[l].key})
+			temp4 = temp4[0].values
+		
+		
+		for(m = 0; m< temp4.length; m++)
+			{
+			
+			HTMLOutput = HTMLOutput + "<tr class='t_level5' showchild='0'  style='display:none' key='L5_"+i+"_"+j+"_"+k+"_"+l+"_"+m+"'  id = 'L4_"+i+"_"+j+"_"+k+"_"+l+"' > <td style='width:350px;' >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;----" + temp4[m].key + "</td><td style='text-align:center'>" +temp4[m].value.LengthofCoboo  +"</td><td style='text-align:center'>" + temp4[m].value.Scriptwriting  +"</td><td style='text-align:center'>" + temp4[m].value.MediaFile  +"</td><td style='text-align:center'>" + temp4[m].value.Production +"</td></tr>"
+				
+			temp5 = nested_L1L2L3L4L5L6.filter(function(d) {  return d.key ==  nested_L1[i].key})
+			temp5 =temp5[0].values
+			temp5 = temp5.filter(function(d) {  return d.key ==  temp.values[j].key})
+			temp5 = temp5[0].values
+			temp5 = temp5.filter(function(d) {  return d.key ==  temp2[k].key})
+			temp5 = temp5[0].values
+			temp5 = temp5.filter(function(d) {  return d.key ==  temp3[l].key})
+			temp5 = temp5[0].values
+			temp5 = temp5.filter(function(d) {  return d.key ==  temp4[m].key})
+			temp5 = temp5[0].values
+		for(n = 0; n< temp5.length; n++)
+			{
+			HTMLOutput = HTMLOutput + "<tr class='t_level6' showchild='0'  id= 'L5_"+i+"_"+j+"_"+k+"_"+l+"_"+m+"'  style='display:none'  key = 'L6_"+i+"_"+j+"_"+k+"_"+l+"_"+n+"'  > <td style='width:350px;' >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp-----" + temp5[n].key + "</td><td style='text-align:center'>" +temp5[n].value.LengthofCoboo  +"</td><td style='text-align:center'>" 
+			+ temp5[n].value.Scriptwriting  +"</td><td style='text-align:center'>" + temp5[n].value.MediaFile  +"</td><td style='text-align:center'>" + temp5[n].value.Production +"</td></tr>"
+			
+				
+			
+			
+			temp6 = nested_L1L2L3L4L5L6L7.filter(function(d) {  return d.key ==  nested_L1[i].key})
+			temp6 =temp6[0].values
+			temp6 = temp6.filter(function(d) {  return d.key ==  temp.values[j].key})
+			temp6 = temp6[0].values
+			temp6 = temp6.filter(function(d) {  return d.key ==  temp2[k].key})
+			temp6 = temp6[0].values
+			temp6 = temp6.filter(function(d) {  return d.key ==  temp3[l].key})
+			temp6 = temp6[0].values
+			temp6 = temp6.filter(function(d) {  return d.key ==  temp4[m].key})
+			temp6 = temp6[0].values
+			temp6 = temp6.filter(function(d) {  return d.key ==  temp5[n].key})
+			temp6 = temp6[0].values
+		for(o = 0; o< temp6.length; o++)
+			{
+			
+				HTMLOutput = HTMLOutput + "<tr style='display:none' showchild='0'  id = 'L6_"+i+"_"+j+"_"+k+"_"+l+"_"+n+"' class='t_level7'>  <td style='width:350px; ' >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp------"  + temp6[o].key + "</td><td style='text-align:center'>"+temp6[o].value.LengthofCoboo  +"</td><td style='text-align:center'>" + temp6[o].value.Scriptwriting  +
+		"</td><td style='text-align:center'>" + temp6[o].value.MediaFile  +"</td><td style='text-align:center'>" + temp6[o].value.Production +"</td></tr>"
+		
+		
+			}	
+			
+			}
+		
+			
+		}
+	
+		
+		
+		    }
+		
+		
+			}
+		}
+	
 	}
-}).entries(data)
-
+	
+	
 }
 
+ 
+HTMLOutput = HTMLOutput+"</table>"	
+$("#TreeGrid").html(HTMLOutput)
 
-
-
-
-return(colorval)
-}
-
-
- 
- 
-L1colorval = getnodecolor_final(Level1_sel,Color_L1 )
-L2colorval = getnodecolor_final(Level2_sel,Color_L2 )
-
-L3colorval = getnodecolor_final(Level3_sel,Color_L3 )
-L4colorval = getnodecolor_final(Level4_sel,Color_L4 )
-
-L5colorval = getnodecolor_final(Level5_sel,Color_L5 )
-L6colorval = getnodecolor_final(Level6_sel,Color_L6 )
-L7colorval = getnodecolor_final(Level7_sel,Color_L7 )
-
-
- 
- 
- 
- 
- function colorRange2(colval)
- {
-   if(colval==0){color = "hsl(0, 100%, 50%)"}
-	  if(colval==1){color =  "hsl(31, 100%, 45%)"}
-	  if(colval==2){color = "hsl(62, 100%, 45%)"}
-	  if(colval==3){color = "hsl(221, 100%, 22%)"}
-	  if(colval==4){color =  "hsl(104, 100%, 14%)"}
-	  return(color)
- }
- 
- 
- 
-
- 
- 
- 
- 
- 
- circlepacking(root)
  
 }
 
@@ -727,273 +1027,7 @@ $('#Concept_Filter').empty()
 	
 }
 
-function circlepacking(root){
 
-d3.select("#PackCircle").select("svg").selectAll("*").remove();
-d3.select("#slider p").remove();
- var width = 900,height = 900;
-
- 
-var zoom = d3.zoom()
-            .scaleExtent([1, 4])
-            .on("zoom", zoomed);
-
-var drag = d3.drag()
-            .subject(function (d) { return d; })
-            .on("start", dragstarted)
-            .on("drag", dragged)
-            .on("end", dragended);
-
-var slider = d3.select("#slider").append("p").append("input")
-            .datum({})
-            .attr("type", "range")
-            .attr("value", zoom.scaleExtent()[0])
-            .attr("min", zoom.scaleExtent()[0])
-            .attr("max", zoom.scaleExtent()[1])
-            .attr("step", (zoom.scaleExtent()[1] - zoom.scaleExtent()[0]) / 20)
-            .on("input", slided);
-
-var svg = d3.select("#PackCircle").select("svg"),
-    margin = 20,
-    diameter = +svg.attr("width"),
-    g = svg.append("g").attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
-svg
-    .call(zoom); 
-
-	
-	var div = d3.select("body").append("div")	
-    .attr("class", "tooltip")				
-    .style("opacity", 0);
-	
-var color = d3.scaleLinear()
-    .domain([-1, 10])
-    .range(["hsl(152,80%,80%)", "hsl(228,30%,40%)"])
-    .interpolate(d3.interpolateHcl);
-
-var pack = d3.pack()
-    .size([diameter - margin, diameter - margin])
-    .padding(2);
-
-
-
- Color_L1 = $('#Color_L1').val()
- Color_L2 = $('#Color_L2').val()
- Color_L3 = $('#Color_L3').val()
- Color_L4 = $('#Color_L4').val()
- Color_L5 = $('#Color_L5').val()
- Color_L6 = $('#Color_L6').val()
- 
-		
-  root = d3.hierarchy(root)
-      .sum(function(d) { return d.size; })
-      .sort(function(a, b) { return b.value - a.value; });
-
-  
-  var focus = root,
-      nodes = pack(root).descendants(),
-      view;
-
-  var tooltip = d3.select("body")
-	.append("div")
-	.style("position", "absolute")
-	.style("z-index", "10")
-	.style("visibility", "hidden")
-	
-	
-	
-function getcolorofnode(ddepth,ddataname)
-{
- if(ddepth ==0){circlecolor = color(ddepth)}
-	  if(ddepth ==1 && Color_L1 == 'Default'){circlecolor = color(ddepth)}
-	  else if(ddepth ==2 && Color_L2 == 'Default'){circlecolor = color(ddepth)}
-	  else if(ddepth ==3 && Color_L3 == 'Default'){circlecolor = color(ddepth)}
-	  else if(ddepth ==4 && Color_L4 == 'Default'){circlecolor = color(ddepth)}
-	  else if(ddepth ==5 && Color_L5 == 'Default'){circlecolor = color(ddepth)}
-	  else if(ddepth ==6 && Color_L6 == 'Default'){circlecolor = color(ddepth)}
-	  else if(ddepth ==7 && Color_L7 == 'Default'){circlecolor = color(ddepth)}
-	  else if(ddepth ==1){ circlecolor = L1colorval.filter(function(d) { return d.key == ddataname })[0].value.color }
-	  else if(ddepth ==2){circlecolor = L2colorval.filter(function(d) { return d.key == ddataname })[0].value.color }
-	  else if(ddepth ==3){circlecolor = L3colorval.filter(function(d) { return d.key == ddataname })[0].value.color }
-	  else if(ddepth ==4){circlecolor = L4colorval.filter(function(d) { return d.key == ddataname })[0].value.color }
-	  else if(ddepth ==5){circlecolor = L5colorval.filter(function(d) { return d.key == ddataname })[0].value.color }
-	  else if(ddepth ==6){circlecolor = L6colorval.filter(function(d) { return d.key == ddataname })[0].value.color }
-	  else if(ddepth ==7){circlecolor = L7colorval.filter(function(d) { return d.key == ddataname })[0].value.color }
-	  return(circlecolor)
-}	
-  var circle = g.selectAll("circle")
-    .data(nodes)
-    .enter().append("circle")
-      .attr("class", function(d) { return d.parent ? d.children ? "node" : "node node--leaf" : "node node--root"; })
-      .style("fill", function(d) {   return getcolorofnode(d.depth, d.data.name) })
-	  
-      .on("click", function(d) {  ; if (focus !== d) zoomfun(d), d3.event.stopPropagation(); })
-	   .on("mouseover", function(d) {
-		if(d.depth ==0){level_sel = "Level: "+ d.data.name}
-	   if(d.depth ==1){level_sel =  "Level: "+ $("#Level1").val()+ "<br>"+ d.data.name}
-	   if(d.depth ==2){level_sel =  "Level: "+ $("#Level2").val()+ "<br>"+ d.data.name}
-	   if(d.depth ==3){level_sel =  "Level: "+ $("#Level3").val()+ "<br>"+ d.data.name}
-	   if(d.depth ==4){level_sel =  "Level: "+ $("#Level4").val()+ "<br>"+ d.data.name}
-	   if(d.depth ==5){level_sel =  "Level: "+ $("#Level5").val()+ "<br>"+ d.data.name}
-	   if(d.depth ==6){level_sel =  "Level: "+ $("#Level6").val()+ "<br>"+ d.data.name}
-	     if(d.depth ==7){level_sel =  "Level: "+ $("#Level7").val()+ "<br>"+ d.data.name}
-	   
-            div.transition()		
-                .duration(200)		
-                .style("opacity", .9);		
-            div	.html(level_sel)	
-                .style("left", (d3.event.pageX) + "px")		
-                .style("top", (d3.event.pageY - 28) + "px");	
-            })					
-        .on("mouseout", function(d) {		
-            div.transition()		
-                .duration(500)		
-                .style("opacity", 0);	
-        })
-	.on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
-	  ;
-
-	  
-function getRandom(arr, n) {
-    var result = new Array(n),
-        len = arr.length,
-        taken = new Array(len);
-    if (n > len)
-        throw new RangeError("getRandom: more elements taken than available");
-    while (n--) {
-        var x = Math.floor(Math.random() * len);
-        result[n] = arr[x in taken ? taken[x] : x];
-        taken[x] = --len in taken ? taken[len] : len;
-    }
-    return result;
-}
-
-len2 = nodes.filter(function(d) { return d.parent === root; }).length
-console.log(len2)
-labelcount = 0
-for(i=0;i<nodes.length;i++)
-{
-if(nodes[i]['parent'] === root)
-{
-labelcount = labelcount + 1
-if(labelcount % 5 != 0 & len2 > 500)
-{
-nodes[i]['Showlabel'] = 'F'
-}
-else
-{
-nodes[i]['Showlabel'] = 'T'
-}
-}
-else
-{
-nodes[i]['Showlabel'] = 'F'
-}
-
-}
-
-console.log(nodes)
-
-  var text = g.selectAll("text")
-    .data(nodes)
-    .enter().append("text")
-      .attr("class", "label")
-      .style("fill-opacity", function(d) { return d.parent === root ? 1 : 0; })
-      .style("display", function(d) { return d.Showlabel === 'T' ? "inline" : "none"; })
-      .text(function(d) { return d.data.name; });
-
-  var node = g.selectAll("circle,text");
-
-  svg
-      .style("background", color(-1))
-      .on("click", function() { zoomfun(root); });
-
-  zoomTo([root.x, root.y, root.r * 2 + margin]);
-
-  function zoomfun(d) {
-    var focus0 = focus; focus = d;
-    var transition = d3.transition()
-        .duration(d3.event.altKey ? 7500 : 750)
-        .tween("zoom", function(d) {
-          var i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2 + margin]);
-          return function(t) { zoomTo(i(t)); };
-        });
-
-    transition.selectAll("text")
-      .filter(function(d) { return d.parent === focus || this.style.display === "inline"; })
-        .style("fill-opacity", function(d) { return d.parent === focus ? 1 : 0; })
-        .on("start", function(d) { if (d.parent === focus) this.style.display = "inline"; })
-        .on("end", function(d) { if (d.parent !== focus) this.style.display = "none"; });
-  }
-
-  function zoomTo(v) {
-    var k = diameter / v[2]; view = v;
-    node.attr("transform", function(d) { return "translate(" + (d.x - v[0]) * k + "," + (d.y - v[1]) * k + ")"; });
-    circle.attr("r", function(d) { return d.r * k; });
-  }
-  
-   function zoomed() {
-   g.style("stroke-width", 1.5 / d3.event.transform.k + "px");
-  g.attr("transform", d3.event.transform); // updated for d3 v4
-  if( Math.round(d3.event.transform.k) == 1)
-  {
-  g.attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
-  }
-           slider.property("value", d3.event.transform.k);
-        }
-
-        function dragstarted(d) {
-            d3.event.sourceEvent.stopPropagation();
-            d3.select(this).classed("dragging", true);
-        }
-
-        function dragged(d) {
-            d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
-        }
-
-        function dragended(d) {
-            d3.select(this).classed("dragging", false);
-        }
-		 function slided(d) {
-            zoom.scaleTo(svg, d3.select(this).property("value"));
-        }
-
-		const cell = svg.append("g")
-      .attr("fill", "none")
-    .selectAll("g")
-    .data(root)
-    .enter().append("g");
-
-  cell.append("path")
-      .attr("stroke", "orange")
-      .attr("d", d => `M${d3.polygonCentroid(d)}L${d.data}`);
-
-  cell.append("path")
-      .attr("stroke", "#ccc")
-      .attr("d", d => `M${d.join("L")}Z`);
-
-
-  svg.append("g")
-      .style("font", "10px sans-serif")
-    .selectAll("text")
-    
-    .enter().append("text")
-      .each(function(d) {
-        const [x, y] = d.data, [cx, cy] = d3.polygonCentroid(d);
-        const angle = Math.round(Math.atan2(cy - y, cx - x) / Math.PI * 2);
-        d3.select(this).call(angle === 0 ? orient.right
-            : angle === -1 ? orient.top
-            : angle === 1 ? orient.bottom
-            : orient.left);
-      })
-      .attr("transform", d => `translate(${d.data})`)
-      .text((d, i) => i);
-
-		
-		
-		}
-function stopped() {
-  if (d3.event.defaultPrevented) d3.event.stopPropagation();
-}
 </script>
 
 <script>
